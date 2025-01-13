@@ -279,6 +279,12 @@ Memory debugging support: no
 
 ## Sierra
 
+
+### Important Note
+* To avoid installing as `root`, I changed the folder ownership
+* When I'm done I need to do `chown -R root:bernie-fem-users  blahdblah`
+
+
 ### Sierra 5.20.1-base-binary-linux-gcc-10.2.0-openmpi-4.0.5
 - Followed supplied `README` file
 - Unpacked compressed file and placed in `~/software/sierra_5.20/binary`
@@ -370,11 +376,6 @@ SIERRA execution successful after 00:00:00 (HH:MM:SS)
 ```
 
 
-### Important Note
-* To avoid installing as `root`, I changed the folder ownership
-* When I'm done I need to do `chown -R root:bernie-fem-users  blahdblah`
-
-
 ### Sierra v5.14 Third Party Libraries
 
 ```
@@ -424,6 +425,7 @@ drwxr-x---. 2 tvj users 3 Mar 27  2023 zlib
 -rw-r-----. 1 tvj users 3308674 Mar 27  2023 yaml-cpp-0.6.3.tar.gz
 -rw-r-----. 1 tvj users 821813 Mar 27  2023 zlib-2.1.0.devel.tar.gz
 ```
+
 
 ### Sierra v5.14 Compile
 * The problem appears to be that Sierra uses its own local Spack to install third party libraries and report back to the program compiling Sierra.  So I can't start it from with my own Spack environment.  They are working on using Spack for everything in the future.
