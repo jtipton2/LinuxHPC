@@ -348,7 +348,21 @@ spack:
         environment: {}
         extra_rpaths: []
 ```
+
+
+
 ## Misc. Install Notes:
+
+### GCC environment error in Spack
+- I submitted a bug report:  https://github.com/spack/spack/issues/47924
+- The spack environment fails to set GCC env paths.  So these must be set manually:
+   - append to PATH:  `/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin`
+   - append to LD_LIBRATH_PATH:  `/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/lib64`
+   - add `CC=/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin/gcc`
+   - add `CXX=/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin/g++`
+   - add `F77=/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin/gfortran`
+   - add `F90=/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin/gfortran`
+
 
 ### gcc@10.2.0 on the Compute Nodes
 - It turns out that the gcc@10.2.0 that was installed didn't work on the architecture of the compute nodes
