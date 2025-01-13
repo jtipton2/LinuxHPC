@@ -126,7 +126,67 @@ IMB-MPI1            impi_cpuinfo  mpif77         mpiicpc  mpitune_fast
 IMB-MPI1-GPU        impi_info     mpif90         mpiicpx
 [tvj@bernie bin]$ 
 ```
+* followed testing proceedures here: https://www.intel.com/content/www/us/en/docs/mpi-library/get-started-guide-linux/2021-14/overview.html
 
+```
+[tvj@bernie ~]$ which icx
+~/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icx
+```
+
+```
+[tvj@bernie ~]$ cat hostfile 
+cnode001.bernie.cluster
+cnode003.bernie.cluster
+```
+
+```
+mpiicc -o myprog /mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/opt/mpi/test/test.c
+```
+
+```
+[tvj@bernie ~]$ mpirun -n 2 -ppn 8 -f ./hostfile uptime
+ 12:16:21 up 75 days,  1:16,  0 users,  load average: 0.00, 0.00, 0.00
+ 12:16:21 up 75 days,  1:16,  0 users,  load average: 0.00, 0.00, 0.00
+```
+
+```
+[tvj@bernie ~]$ mpirun -n 2 -ppn 8 -f ./hostfile ./myprog 
+[1736788625.693157] [cnode001:521140:0]          select.c:630  UCX  ERROR   no active messages transport to <no debug data>: self/memory - Destination is unreachable
+Abort(1614735) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)............: 
+MPID_Init(1645)..................: 
+MPIDI_OFI_mpi_init_hook(1703)....: 
+insert_addr_table_roots_only(473): OFI get address vector map failed
+```
+
+**NOTE:**
+* After much trial and error, I discovered that I needed to set `export I_MPI_OFI_PROVIDER=tcp` to get this to work.
+* I still don't understand what is happening.  This seems to tell Intel to use ethernet instead of the Mellanox Infiniband.  More troubleshooting is needed.
+
+```
+[tvj@bernie ~]$ export I_MPI_OFI_PROVIDER=tcp
+[tvj@bernie ~]$ mpirun -n 2 -ppn 8 -f ./hostfile ./myprog 
+Hello world: rank 0 of 2 running on cnode001.bernie.cluster
+Hello world: rank 1 of 2 running on cnode001.bernie.cluster
+[tvj@bernie ~]$ mpirun -n 16 -ppn 8 -f ./hostfile ./myprog 
+Hello world: rank 0 of 16 running on cnode001.bernie.cluster
+Hello world: rank 1 of 16 running on cnode001.bernie.cluster
+Hello world: rank 2 of 16 running on cnode001.bernie.cluster
+Hello world: rank 3 of 16 running on cnode001.bernie.cluster
+Hello world: rank 4 of 16 running on cnode001.bernie.cluster
+Hello world: rank 5 of 16 running on cnode001.bernie.cluster
+Hello world: rank 6 of 16 running on cnode001.bernie.cluster
+Hello world: rank 7 of 16 running on cnode001.bernie.cluster
+Hello world: rank 8 of 16 running on cnode003.bernie.cluster
+Hello world: rank 9 of 16 running on cnode003.bernie.cluster
+Hello world: rank 10 of 16 running on cnode003.bernie.cluster
+Hello world: rank 11 of 16 running on cnode003.bernie.cluster
+Hello world: rank 12 of 16 running on cnode003.bernie.cluster
+Hello world: rank 13 of 16 running on cnode003.bernie.cluster
+Hello world: rank 14 of 16 running on cnode003.bernie.cluster
+Hello world: rank 15 of 16 running on cnode003.bernie.cluster
+[tvj@bernie ~]$ 
+```
 
 
 
