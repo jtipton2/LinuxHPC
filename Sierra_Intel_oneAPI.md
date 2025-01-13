@@ -159,9 +159,9 @@ MPIDI_OFI_mpi_init_hook(1703)....:
 insert_addr_table_roots_only(473): OFI get address vector map failed
 ```
 
-**NOTE:**
-* After much trial and error, I discovered that I needed to set `export I_MPI_OFI_PROVIDER=tcp` to get this to work.
-* I still don't understand what is happening.  This seems to tell Intel to use ethernet instead of the Mellanox Infiniband.  More troubleshooting is needed.
+> [!CAUTION]
+> After much trial and error, I discovered that I needed to set `export I_MPI_OFI_PROVIDER=tcp` to get this to work.
+> I still don't understand what is happening.  This seems to tell Intel to use ethernet instead of the Mellanox Infiniband.  More troubleshooting is needed.
 
 ```
 [tvj@bernie ~]$ export I_MPI_OFI_PROVIDER=tcp
