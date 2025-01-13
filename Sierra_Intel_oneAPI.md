@@ -113,10 +113,10 @@ export DIAGUTIL_PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra5
 
 
 ## Testing Intel oneAPI
+* installed `sierra522mod` environment as shown above
+* Here are the MPI programs that were created.  Most of these are wrappers and can be read with a text editor.  It turns out that the classic `icc` compiler is no longer included.  It was therefore very important to set the I_MPI_CC variable to point to `icx`.  Otherwise, `mpiicc` and the like would fail.
 
-* installed sierra522 YAML
-* Here's what was created.  Most of these are wrappers and can be read with a text editor.  It turns out that "icc" was no longer included.  It was therefore very important to set the I_MPI_CC variable to point to "icx".
-
+```
 [tvj@bernie bin]$ ls
 cpuinfo             IMB-MT        mpicc          mpifc    mpiicx
 hydra_bstrap_proxy  IMB-NBC       mpicxx         mpigcc   mpiifort
@@ -125,6 +125,11 @@ hydra_pmi_proxy     IMB-RMA       mpiexec.hydra  mpiicc   mpirun
 IMB-MPI1            impi_cpuinfo  mpif77         mpiicpc  mpitune_fast
 IMB-MPI1-GPU        impi_info     mpif90         mpiicpx
 [tvj@bernie bin]$ 
+```
+
+
+
+
 
 ## Compiling Sierra v5.22
 * there were install errors with python headers
