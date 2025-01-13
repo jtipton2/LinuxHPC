@@ -117,6 +117,9 @@ export DIAGUTIL_PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra5
 * Here are the MPI programs that were created.  Most of these are wrappers and can be read with a text editor.  It turns out that the classic `icc` compiler is no longer included.  It was therefore very important to set the I_MPI_CC variable to point to `icx`.  Otherwise, `mpiicc` and the like would fail.
 
 ```
+[tvj@bernie bin]$ pwd
+/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/bin
+
 [tvj@bernie bin]$ ls
 cpuinfo             IMB-MT        mpicc          mpifc    mpiicx
 hydra_bstrap_proxy  IMB-NBC       mpicxx         mpigcc   mpiifort
@@ -230,3 +233,24 @@ _SIERRA_INSTALL_DIR=/data/software/Sierra/5.22/install
 export PATH=${_SIERRA_INSTALL_DIR}/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/engine:${_SIERRA_INSTALL_DIR}/tools/contrib/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/job_scripts:${_SIERRA_INSTALL_DIR}/apps/bin:$PATH
 export PYTHONPATH=${_SIERRA_INSTALL_DIR}/tools/tpls/utilities:$PYTHONPATH
 ```
+
+
+
+
+## Troubleshooting Sierra v5.22
+
+
+
+
+
+
+
+## Additional resources to explore
+- [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
+- [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-11/job-schedulers-support.html
+- [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-windows/2021-8/mpiexec-hydra.html
+- [ ] https://community.intel.com/t5/Intel-MPI-Library/Configuration-for-Intel-impi/m-p/1553070#M11253
+- [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/mpi-library-2019-over-libfabric.html
+- [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-linux/2021-8/ofi-capable-network-fabrics-control.html
+- [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/mpi-library-2019-over-libfabric.html
+- [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/improve-performance-and-stability-with-intel-mpi-library-on-infiniband.html
