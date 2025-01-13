@@ -348,3 +348,97 @@ spack:
         environment: {}
         extra_rpaths: []
 ```
+## Misc. Install Notes:
+
+### gcc@10.2.0 on the Compute Nodes
+- It turns out that the gcc@10.2.0 that was installed didn't work on the architecture of the compute nodes
+- I think I need to instead use:  spack install gcc@10.2.0 target="x86_64"
+- I also learned that `mpicc` is just a wrapper for `gcc` and can be viewed in detail via `mpicc --showme mpi_hello_world.c`
+- see:  https://docs.open-mpi.org/en/main/man-openmpi/man1/ompi-wrapper-compiler.1.html
+```
+[tvj@cnode001 Documents]$ ~/software/spack/var/spack/environments/ompi41t1/.spack-env/view/bin/mpicc
+[tvj@cnode001 Documents]$ ~/software/spack/var/spack/environments/ompi41t1/.spack-env/view/bin/mpicc --version
+[tvj@cnode001 Documents]$ mpicc --showme mpi_hello_world.c 
+/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-icelake/gcc-8.5.0/gcc-10.2.0-xdrxrw6qdcaqljdci3lj23su6ayg5g5u/bin/gcc mpi_hello_world.c -I/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-10.2.0/openmpi-4.1.7-bj76src2q3j7rmw4x7m3eililaygmczd/include -pthread -L/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-10.2.0/openmpi-4.1.7-bj76src2q3j7rmw4x7m3eililaygmczd/lib -L/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-10.2.0/hwloc-2.11.1-udjpidphi4dsorjf5a6i76lpug4xecz5/lib -L/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-10.2.0/libevent-2.1.12-ang7uo5zm2h7tqzd7xhqtb66qjkw6zvt/lib -Wl,-rpath,/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-icelake/gcc-8.5.0/gcc-10.2.0-xdrxrw6qdcaqljdci3lj23su6ayg5g5u/lib/gcc/x86_64-pc-linux-gnu/10.2.0 -Wl,-rpath,/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-icelake/gcc-8.5.0/gcc-10.2.0-xdrxrw6qdcaqljdci3lj23su6ayg5g5u/lib64 -Wl,-rpath -Wl,/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-10.2.0/openmpi-4.1.7-bj76src2q3j7rmw4x7m3eililaygmczd/lib -Wl,-rpath -Wl,/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-10.2.0/hwloc-2.11.1-udjpidphi4dsorjf5a6i76lpug4xecz5/lib -Wl,-rpath -Wl,/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-10.2.0/libevent-2.1.12-ang7uo5zm2h7tqzd7xhqtb66qjkw6zvt/lib -lmpi
+[tvj@cnode001 Documents]$ gcc --version
+gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-22)
+Copyright (C) 2018 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[tvj@cnode001 Documents]$ which gcc
+/usr/bin/gcc
+[tvj@cnode001 Documents]$ /mnt/home/tvj/software/spack/opt/spack/linux-rhel8-icelake/gcc-8.5.0/gcc-10.2.0-xdrxrw6qdcaqljdci3lj23su6ayg5g5u/bin/gcc --version
+Illegal instruction (core dumped)
+[tvj@cnode001 Documents]$ 
+```
+
+### pytetgen
+- Tried to install pytetgen manually - SUCCESS!! - using python@3.9
+- I had to do this manually
+```
+[py39test] [tvj@bernie Documents]$ cd ../software/pytetgen/
+[py39test] [tvj@bernie pytetgen]$ ll
+total 60
+drwxr-xr-x. 3 tvj users     4 Dec  4 11:44 docs
+-rw-r--r--. 1 tvj users 34523 Dec  4 11:44 LICENSE.txt
+-rw-r--r--. 1 tvj users   166 Dec  4 11:44 MANIFEST.in
+drwxr-xr-x. 3 tvj users     7 Dec  4 11:44 pytetgen
+-rw-r--r--. 1 tvj users  2804 Dec  4 11:44 README.rst
+-rw-r--r--. 1 tvj users    19 Dec  4 11:44 requirements.txt
+-rw-r--r--. 1 tvj users  2215 Dec  4 11:45 setup.py
+[py39test] [tvj@bernie pytetgen]$ python setup.py install
+/mnt/home/tvj/software/spack/var/spack/environments/py39test/.spack-env/view/lib/python3.9/site-packages/setuptools/_distutils/extension.py:134: UserWarning: Unknown Extension options: 'compiler_directives'
+  warnings.warn(msg)
+/mnt/home/tvj/software/spack/var/spack/environments/py39test/.spack-env/view/lib/python3.9/site-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` directly.
+        Instead, use pypa/build, pypa/installer or other
+        standards-based tools.
+
+        See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()
+/mnt/home/tvj/software/spack/var/spack/environments/py39test/.spack-env/view/lib/python3.9/site-packages/setuptools/_distutils/cmd.py:66: EasyInstallDeprecationWarning: easy_install command is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` and ``easy_install``.
+        Instead, use pypa/build, pypa/installer or other
+        standards-based tools.
+
+        See https://github.com/pypa/setuptools/issues/917 for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()
+warning: no files found matching 'pytetgen/pytetgen.cpp'
+Compiling pytetgen/pytetgen.pyx because it changed.
+[1/1] Cythonizing pytetgen/pytetgen.pyx
+warning: pytetgen/pytetgen.pyx:90:12: Unreachable code
+In file included from /mnt/home/tvj/software/spack/var/spack/environments/py39test/.spack-env/view/lib/python3.9/site-packages/numpy/_core/include/numpy/ndarraytypes.h:1909,
+                 from /mnt/home/tvj/software/spack/var/spack/environments/py39test/.spack-env/view/lib/python3.9/site-packages/numpy/_core/include/numpy/ndarrayobject.h:12,
+                 from /mnt/home/tvj/software/spack/var/spack/environments/py39test/.spack-env/view/lib/python3.9/site-packages/numpy/_core/include/numpy/arrayobject.h:5,
+                 from pytetgen/pytetgen.cpp:1271:
+/mnt/home/tvj/software/spack/var/spack/environments/py39test/.spack-env/view/lib/python3.9/site-packages/numpy/_core/include/numpy/npy_1_7_deprecated_api.h:17:2: warning: #warning "Using deprecated NumPy API, disable it with " "#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION" [-Wcpp]
+   17 | #warning "Using deprecated NumPy API, disable it with " \
+      |  ^~~~~~~
+pytetgen/tetgen.cxx: In member function 'bool tetgenbehavior::parse_commandline(int, char**)':
+pytetgen/tetgen.cxx:3144:53: warning: passing argument 2 to 'restrict'-qualified parameter aliases with argument 1 [-Wrestrict]
+ 3144 |           brio_threshold = (int) strtol(workstring, (char **) &workstring, 0);
+      |                                         ~~~~~~~~~~  ^~~~~~~~~~~~~~~~~~~~~
+pytetgen/tetgen.cxx:3173:54: warning: passing argument 2 to 'restrict'-qualified parameter aliases with argument 1 [-Wrestrict]
+ 3173 |             hilbert_limit = (int) strtol(workstring, (char **) &workstring, 0);
+      |                                          ~~~~~~~~~~  ^~~~~~~~~~~~~~~~~~~~~
+pytetgen/tetgen.cxx: In member function 'int tetgenmesh::add_steinerpt_in_segment(tetgenmesh::face*, int)':
+pytetgen/tetgen.cxx:19171:7: warning: variable 'success' set but not used [-Wunused-but-set-variable]
+19171 |   int success;
+      |       ^~~~~~~
+zip_safe flag not set; analyzing archive contents...
+__pycache__.pytetgen.cpython-39: module references __file__
+```
+
