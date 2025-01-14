@@ -567,8 +567,10 @@ ERROR: Previous command failed (exitcode=255)
 
 
 
-## Additional resources to explore
+## Additional questions and resources to explore
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
+- [ ] The slow queue nodes are `linux-rhel8-ivybridge`.  How can I optimize the compile of Sierra for these?
+- [ ] How can I ensure that MPI is optimized and running propertly?
 - [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-11/job-schedulers-support.html
 - [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-windows/2021-8/mpiexec-hydra.html
 - [ ] https://community.intel.com/t5/Intel-MPI-Library/Configuration-for-Intel-impi/m-p/1553070#M11253
