@@ -202,7 +202,15 @@ insert_addr_table_roots_only(473): OFI get address vector map failed
 
 > [!CAUTION]
 > After much trial and error, I discovered that I needed to set `export I_MPI_OFI_PROVIDER=tcp` to get this to work.
-> I still don't understand what is happening.  This seems to tell Intel to use ethernet instead of the Mellanox Infiniband.  More troubleshooting is needed.
+> At first glance, this seems to tell Intel to use ethernet instead of the Mellanox Infiniband.
+> If I try to set `mlx` per this web resource (https://www.intel.com/content/www/us/en/developer/articles/technical/mpi-library-2019-over-libfabric.html) I get an error.
+> I think the key is that `tcp` really uses `IPoIB` which is Infiniband over ethernet.  I can confirm below:
+> ```
+> [tvj@cnode001 ~]$ lsmod | grep ipoib
+> ib_ipoib              147456  0
+> ib_cm                 118784  3 rdma_cm,ib_ipoib,ib_srpt
+> ib_core               405504  12 rdma_cm,ib_ipoib,rpcrdma,mlx4_ib,ib_srpt,iw_cm,ib_iser,ib_umad,ib_isert,rdma_ucm,ib_uverbs,ib_cm
+> ```
 
 ```
 [tvj@bernie ~]$ export I_MPI_OFI_PROVIDER=tcp
