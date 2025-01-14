@@ -519,6 +519,54 @@ SIERRA execution successful after 00:00:09 (HH:MM:SS)
 
 
 
+## Testing Sierra v5.22 with Slurm
+* see Slurm script above
+* I use a sample explicit problem that is the response of a nested sphere to a rapid thermal expansion due to proton pulse heating.  It captures the physics and simulation workflow that I need for spallation target development.
+* It runs best when invoked via `mpiexec -np ${SLURM_NTASKS} adagio -i LasagnaOpt_Dynamic.i`
+* When invoked via `srun --mpi=pmi2 adagio -i LasagnaOpt_Dynamic.i`, the simulation seems to take much longer to begin.  It also seems to increase the simulation time by ~1% (which could be in the noise... I haven't explored further).
+* When invoked via `sierra --np ${SLURM_NTASKS} --run adagio -i $INPUT_FILENAME`
+  - Sierra appears to be a python script that itself invokes another python script called `launch`.
+  - This then tries to start teh simulation using `mpiexec` with a `-r ssh` option.  This causes a crash as shown.
+  - If I manually remove `-r ssh`, then everything runs fine.  And I also don't need the `- envlist option`.
+  - Oddly enough, when I invoke _outside_ of slurm, I can run `mpiexec` with and without `-r ssh`.
+
+```
+NOTICE: Found adagio in PATH at /data/software/Sierra/5.22/install/apps/bin/adagio
+***** Executing sierra batch script *****
+Executing: /mnt/home/tvj/Documents/1_SIERRA_Troubleshooting/sierra_batch_script_526691.sh
+
+***** Executing sierra *****
+Executing: launch -n 16 adagio -i LasagnaOpt_Dynamic.i
+Obtained cached build options from '/data/software/Sierra/5.22/install/apps/bin/.build_metadata'
+mpiexec -r ssh -np 16 -envlist PATH,LD_LIBRARY_PATH,PWD adagio -i LasagnaOpt_Dynamic.i
+[mpiexec@cnode001.bernie.cluster] Error: Unable to run bstrap_proxy on cnode003 (pid 526696, exit code 65280)
+[mpiexec@cnode001.bernie.cluster] poll_for_event (../../../../../src/pm/i_hydra/libhydra/demux/hydra_demux_poll.c:157): check exit codes error
+[mpiexec@cnode001.bernie.cluster] HYD_dmx_poll_wait_for_proxy_event (../../../../../src/pm/i_hydra/libhydra/demux/hydra_demux_poll.c:206): poll for event error
+[mpiexec@cnode001.bernie.cluster] HYD_bstrap_setup (../../../../../src/pm/i_hydra/libhydra/bstrap/src/intel/i_hydra_bstrap.c:1063): error waiting for event
+[mpiexec@cnode001.bernie.cluster] Error setting up the bootstrap proxies
+[mpiexec@cnode001.bernie.cluster] Possible reasons:
+[mpiexec@cnode001.bernie.cluster] 1. Host is unavailable. Please check that all hosts are available.
+[mpiexec@cnode001.bernie.cluster] 2. Cannot launch hydra_bstrap_proxy or it crashed on one of the hosts.
+[mpiexec@cnode001.bernie.cluster]    Make sure hydra_bstrap_proxy is available on all hosts and it has right permissions.
+[mpiexec@cnode001.bernie.cluster] 3. Firewall refused connection.
+[mpiexec@cnode001.bernie.cluster]    Check that enough ports are allowed in the firewall and specify them with the I_MPI_PORT_RANGE variable.
+[mpiexec@cnode001.bernie.cluster] 4. Ssh bootstrap cannot launch processes on remote host.
+[mpiexec@cnode001.bernie.cluster]    Make sure that passwordless ssh connection is established across compute hosts.
+[mpiexec@cnode001.bernie.cluster]    You may try using -bootstrap option to select alternative launcher.
+unknown option -- -
+usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-B bind_interface]
+           [-b bind_address] [-c cipher_spec] [-D [bind_address:]port]
+           [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11]
+           [-i identity_file] [-J [user@]host[:port]] [-L address]
+           [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]
+           [-Q query_option] [-R address] [-S ctl_path] [-W host:port]
+           [-w local_tun[:remote_tun]] destination [command]
+Command: 'mpiexec -r ssh -np 16 -envlist PATH,LD_LIBRARY_PATH,PWD adagio -i LasagnaOpt_Dynamic.i' failed with exit status 255
+ERROR: Previous command failed (exitcode=255)
+```
+
+
+
 ## Additional resources to explore
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
 - [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-11/job-schedulers-support.html
