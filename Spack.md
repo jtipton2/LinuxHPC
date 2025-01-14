@@ -357,11 +357,12 @@ spack:
 - I submitted a bug report:  https://github.com/spack/spack/issues/47924
 - The spack environment fails to set GCC env paths.  So these must be set manually:
    - append to PATH:  `/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin`
-   - append to LD_LIBRATH_PATH:  `/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/lib64`
+   - append to LD_LIBRARY_PATH:  `/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/lib64`
    - add `CC=/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin/gcc`
    - add `CXX=/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin/g++`
    - add `F77=/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin/gfortran`
    - add `F90=/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin/gfortran`
+ - The library path was a bit trickier to discover.  Everything went fine including the Sierra compile.  When I tried to invoke Sierra, however, I got an error for a missing `GLIBCXX_3.4.26`.  That led me to https://stackoverflow.com/questions/69288536/libstdc-so-6-version-glibcxx-3-4-26-not-found-on-linux which identified my problem.
 
 
 ### gcc@10.2.0 on the Compute Nodes
