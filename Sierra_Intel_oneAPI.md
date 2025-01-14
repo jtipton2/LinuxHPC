@@ -193,6 +193,121 @@ Hello world: rank 15 of 16 running on cnode003.bernie.cluster
 
 
 
+## Testing Slurm with Intel oneAPI
+* `test_mpi.slurm` script
+```
+#!/bin/bash
+
+#SBATCH --job-name=test
+#SBATCH --nodes=2
+#SBATCH --ntasks=16
+#SBATCH --time=00:01:00
+#SBATCH --partition=slow
+#SBATCH --mail-user=tvj@ornl.gov
+#
+#
+cd $SLURM_SUBMIT_DIR
+echo "SLURM_SUBMIT_DIR is $SLURM_SUBMIT_DIR"
+
+#
+# Load environment
+# V3:  Sierra v5.22 compiled with Intel oneAPI
+#
+export PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/oclfpga/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mkl/2024.2/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/bin:/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin:$PATH
+export LD_LIBRARY_PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/oclfpga/host/linux64/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/compiler/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mkl/2024.2/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/lib:/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/lib64:$LD_LIBRARY_PATH
+export CC=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icx
+export CXX=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icpx
+export FC=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
+export F77=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
+export I_MPI_ROOT=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12
+export MKLROOT=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mkl/2024.2
+export OCL_ICD_FILENAMES=libintelocl_emu.so:libalteracl.so:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/lib/libintelocl.so
+export FI_PROVIDER_PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib/prov:/usr/lib64/libfabric
+export I_MPI_CC=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icx
+export I_MPI_CXX=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icpx
+export I_MPI_F77=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
+export I_MPI_F90=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
+_SIERRA_INSTALL_DIR=/data/software/Sierra/5.22/install
+export PATH=${_SIERRA_INSTALL_DIR}/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/engine:${_SIERRA_INSTALL_DIR}/tools/contrib/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/job_scripts:${_SIERRA_INSTALL_DIR}/apps/bin:$PATH
+export PYTHONPATH=${_SIERRA_INSTALL_DIR}/tools/tpls/utilities:$PYTHONPATH
+export I_MPI_OFI_PROVIDER=tcp
+
+#
+# Compile the code
+#make
+mpicc -o mpi_hello_world ./mpi_hello_world.c
+
+#
+# Run the compiled code
+mpirun ./mpi_hello_world
+#mpiexec ./mpi_hello_world
+#srun --mpi=pmi2 ./mpi_hello_world
+#srun ./mpi_hello_world
+```
+
+* run script using `srun ./mpi_hello_world`
+```
+SLURM_SUBMIT_DIR is /mnt/home/tvj/Documents
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
+Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
+```
+
+* run script using
+  - `srun --mpi=pmi2 ./mpi_hello_world`
+  - `mpirun ./mpi_hello_world`
+  - `mpiexec ./mpi_hello_world`
+```
+SLURM_SUBMIT_DIR is /mnt/home/tvj/Documents
+Hello world from processor cnode003.bernie.cluster, rank 8 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 9 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 15 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 0 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 1 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 2 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 4 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 5 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 7 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 3 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 10 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 11 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 12 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 6 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 13 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 14 out of 16 processors
+```
+
+
+
 
 ## Compiling Sierra v5.22
 
@@ -237,7 +352,7 @@ export PYTHONPATH=${_SIERRA_INSTALL_DIR}/tools/tpls/utilities:$PYTHONPATH
 
 
 
-## Troubleshooting Sierra v5.22
+## Testing Sierra v5.22
 * set environment
 ```
 export PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/oclfpga/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mkl/2024.2/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/bin:/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin:$PATH
@@ -362,128 +477,6 @@ There were no errors encountered during execution
 There was 1 warning encountered during execution
 +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
 SIERRA execution successful after 00:00:09 (HH:MM:SS)
-```
-
-* run test program with `-envlist PATH,LD_LIBRARY_PATH,PWD` option
-```
-[tvj@bernie 1_SIERRA_Troubleshooting]$ mpiexec -r ssh -envlist PATH,LD_LIBRARY_PATH,PWD -n 16 -ppn 8 -f ./hostfile  adagio -i LasagnaOpt_Dynamic.i
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1613): 
-open_fabric(2695)............: 
-find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
-```
-
-* run test program via slurm script using `srun adagio -i LasagnaOpt_Dynamic.i`
-```
-+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
-Executing procedure                                         Jan 14 2025 08:55:52
-
-
-                                     crit. ts     crit. ts
-   step      time      time step    element id   block name       KE           IE           EE        ERROR %        HGE        cpu time    real time
-  ------  ----------   ----------   ----------   ----------     ----------   ----------   ----------   ----------   ----------   ----------   ----------
-0         1.0000e-02   8.6334e-09   379567       shroud         1.3720e-09  -1.3720e-09   0.0000e+00   2.0680e-25   0.0000e+00   1.2248e+02   9.8075e+00
-ro/code/Sierra/sierra_util/domain/Domain.C:415
-    from ResultsOutput::define_model()
-    from sierra::Fmwk::Region::process_output(Real, Int, UInt)
-    from virtual void sierra::sm::Procedure::executeNextStep()
-    from sierra::Domain::execute()
-
-
-SIERRA execution failed after 00:01:53 (HH:MM:SS)
-:SS)
 ```
 
 
