@@ -272,6 +272,20 @@ Memory debugging support: no
 
 ```
 
+The entries:
+```
+MCA btl: vader (MCA v2.1.0, API v3.1.0, Component v4.1.7)
+MCA btl: tcp (MCA v2.1.0, API v3.1.0, Component v4.1.7)
+MCA btl: self (MCA v2.1.0, API v3.1.0, Component v4.1.7)
+```
+Stand for _Modular Component Architecture Byte Transfer Layer_.  At first glance, `openib` is missing which would suggest that Infiniband support is missing.  But I think that Infiniband is activated over ethernet instead.  If I follow this link https://www.cfd-online.com/Forums/openfoam/123127-how-confirm-i-have-already-use-infiniband-openfoam.html, I can confirm via:
+
+```
+$ lsmod | grep ipoib
+ib_ipoib              147456  0
+ib_cm                 118784  3 rdma_cm,ib_ipoib,ib_srpt
+ib_core               405504  13 rdma_cm,ib_ipoib,rpcrdma,ib_srpt,iw_cm,bnxt_re,ib_iser,ib_umad,ib_isert,rdma_ucm,ib_uverbs,mlx5_ib,ib_cm
+```
 
 
 
