@@ -584,6 +584,11 @@ ERROR: Previous command failed (exitcode=255)
 * Spack keeps track of architectures via https://github.com/spack/spack/blob/develop/lib/spack/external/archspec/json/cpu/microarchitectures.json
 * I can see if this worked through an adagio log file which will have `Simd vector width 4' if it works and `2` otherwise.
 
+### Understanding MPI libfabric
+* Why doesn't `I_MPI_OFI_PROVIDER=mlx` work?
+* `fi_info` output shows `mlx` as an option
+* Is it best practice to just use `tcp` with `IBoIP`?
+
 ### How to benchmark machine
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
 - [ ] https://mvapich.cse.ohio-state.edu/benchmarks/
