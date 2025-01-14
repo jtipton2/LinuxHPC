@@ -576,9 +576,19 @@ ERROR: Previous command failed (exitcode=255)
 
 
 ## Additional questions and resources to explore
+
+### How to optimize compiling of Sierra
+* The slow queue nodes are `linux-rhel8-ivybridge`
+* Currently, I compile on the headnode using `x86_64` generic targets.
+* Sierra DevOps recommended compiling on the compute node using the native `ivybridge` target.
+* Spack keeps track of architectures via https://github.com/spack/spack/blob/develop/lib/spack/external/archspec/json/cpu/microarchitectures.json
+* I can see if this worked through an adagio log file which will have `Simd vector width 4' if it works and `2` otherwise.
+
+### How to benchmark machine
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
-- [ ] The slow queue nodes are `linux-rhel8-ivybridge`.  How can I optimize the compile of Sierra for these?
-- [ ] How can I ensure that MPI is optimized and running propertly?
+- [ ] https://mvapich.cse.ohio-state.edu/benchmarks/
+
+### Resources to read
 - [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-11/job-schedulers-support.html
 - [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-windows/2021-8/mpiexec-hydra.html
 - [ ] https://community.intel.com/t5/Intel-MPI-Library/Configuration-for-Intel-impi/m-p/1553070#M11253
