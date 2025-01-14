@@ -15,6 +15,13 @@ BERNIE | 1 & 3 | v5.14 | gcc-8.5.0 | 1,497 s
 BERNIE | 1 & 3 | v5.14 | gcc-10.2.0 | 1,558 s
 BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | 1,406 s
 
+My notes are structured as follows:
+
+[Spack](Spack.md)
+
+[Sierra_GCC_OpenMPI](Sierra_GCC_OpenMPI.md)
+
+[Sierra_Intel_oneAPI](Sierra_Intel_oneAPI.md)
 
 
 
