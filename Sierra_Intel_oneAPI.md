@@ -74,6 +74,44 @@ spack env deactivate
 spack env activate -p sierra522mod  #needed to set env variables correctly
 ```
 
+```
+[tvj@bernie ~]$ spack env activate -p sierra522mod
+
+[sierra522mod] [tvj@bernie ~]$ spack find
+==> In environment sierra522mod
+==> 3 root specs
+[+] intel-oneapi-compilers@2024.1.0  [+] intel-oneapi-mkl@2024.2.0 +cluster  [+] intel-oneapi-mpi@2021.12.1
+
+-- linux-rhel8-x86_64 / gcc@10.2.0 ------------------------------
+cmake@3.26.5        gmake@4.2.1                      intel-oneapi-mkl@2024.2.0   libiconv@1.17      ncurses@6.5      util-macros@1.20.1
+gcc-runtime@10.2.0  hwloc@2.11.1                     intel-oneapi-mpi@2021.12.1  libpciaccess@0.17  patchelf@0.17.2  xz@5.4.6
+glibc@2.28          intel-oneapi-compilers@2024.1.0  intel-tbb@2021.12.0         libxml2@2.13.4     pkgconf@1.4.2    zlib-ng@2.2.1
+==> 18 installed packages
+==> 0 concretized packages to be installed (show with `spack find -c`)
+
+[sierra522mod] [tvj@bernie ~]$ spack spec
+[+]  intel-oneapi-compilers@2024.1.0%gcc@10.2.0~amd+envmods~nvidia build_system=generic arch=linux-rhel8-x86_64
+[+]      ^gcc-runtime@10.2.0%gcc@10.2.0 build_system=generic arch=linux-rhel8-x86_64
+[e]      ^glibc@2.28%gcc@10.2.0 build_system=autotools arch=linux-rhel8-x86_64
+[+]      ^patchelf@0.17.2%gcc@10.2.0 build_system=autotools arch=linux-rhel8-x86_64
+[e]          ^gmake@4.2.1%gcc@10.2.0~guile build_system=generic patches=ca60bd9,fe5b60d arch=linux-rhel8-x86_64
+[+]  intel-oneapi-mkl@2024.2.0%gcc@10.2.0+cluster+envmods~gfortran~ilp64+shared build_system=generic mpi_family=mpich threads=none arch=linux-rhel8-x86_64
+[+]      ^intel-tbb@2021.12.0%gcc@10.2.0~ipo+shared+tm build_system=cmake build_type=Release cxxstd=default generator=make arch=linux-rhel8-x86_64
+[e]          ^cmake@3.26.5%gcc@10.2.0~doc+ncurses+ownlibs~qtgui build_system=generic build_type=Release patches=dbc3892 arch=linux-rhel8-x86_64
+[+]          ^hwloc@2.11.1%gcc@10.2.0~cairo~cuda~gl~libudev+libxml2~nvml~oneapi-level-zero~opencl+pci~rocm build_system=autotools libs=shared,static arch=linux-rhel8-x86_64
+[+]              ^libpciaccess@0.17%gcc@10.2.0 build_system=autotools arch=linux-rhel8-x86_64
+[+]                  ^util-macros@1.20.1%gcc@10.2.0 build_system=autotools arch=linux-rhel8-x86_64
+[+]              ^libxml2@2.13.4%gcc@10.2.0+pic~python+shared build_system=autotools arch=linux-rhel8-x86_64
+[+]                  ^libiconv@1.17%gcc@10.2.0 build_system=autotools libs=shared,static arch=linux-rhel8-x86_64
+[+]                  ^xz@5.4.6%gcc@10.2.0~pic build_system=autotools libs=shared,static arch=linux-rhel8-x86_64
+[+]                  ^zlib-ng@2.2.1%gcc@10.2.0+compat+new_strategies+opt+pic+shared build_system=autotools arch=linux-rhel8-x86_64
+[+]              ^ncurses@6.5%gcc@10.2.0~symlinks+termlib abi=none build_system=autotools patches=7a351bc arch=linux-rhel8-x86_64
+[e]              ^pkgconf@1.4.2%gcc@10.2.0 build_system=autotools arch=linux-rhel8-x86_64
+[+]  intel-oneapi-mpi@2021.12.1%gcc@10.2.0~classic-names+envmods~external-libfabric~generic-names~ilp64 build_system=generic arch=linux-rhel8-x86_64
+```
+
+
+
 ### Environment variables
 * explored `env` output to discover what the environment was setting
 * added settings for the GCC@10.2.0 settings
