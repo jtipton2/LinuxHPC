@@ -238,10 +238,253 @@ export PYTHONPATH=${_SIERRA_INSTALL_DIR}/tools/tpls/utilities:$PYTHONPATH
 
 
 ## Troubleshooting Sierra v5.22
+* set environment
+```
+export PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/oclfpga/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mkl/2024.2/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/bin:/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin:$PATH
+export LD_LIBRARY_PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/oclfpga/host/linux64/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/compiler/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mkl/2024.2/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/lib:/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/lib64:$LD_LIBRARY_PATH
+export CC=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icx
+export CXX=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icpx
+export FC=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
+export F77=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
+export I_MPI_ROOT=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12
+export MKLROOT=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mkl/2024.2
+export OCL_ICD_FILENAMES=libintelocl_emu.so:libalteracl.so:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/lib/libintelocl.so
+export FI_PROVIDER_PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib/prov:/usr/lib64/libfabric
+export I_MPI_CC=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icx
+export I_MPI_CXX=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icpx
+export I_MPI_F77=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
+export I_MPI_F90=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
+_SIERRA_INSTALL_DIR=/data/software/Sierra/5.22/install
+export PATH=${_SIERRA_INSTALL_DIR}/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/engine:${_SIERRA_INSTALL_DIR}/tools/contrib/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/job_scripts:${_SIERRA_INSTALL_DIR}/apps/bin:$PATH
+export PYTHONPATH=${_SIERRA_INSTALL_DIR}/tools/tpls/utilities:$PYTHONPATH
+export I_MPI_OFI_PROVIDER=tcp
+```
+  
+* check Sierra executable
+```
+[tvj@bernie 1_SIERRA_Troubleshooting]$ which adagio
+/data/software/Sierra/5.22/install/apps/bin/adagio
+
+[tvj@bernie 1_SIERRA_Troubleshooting]$ adagio --version
+Application: Adagio
+  Executable: /data/software/Sierra/5.22/install/apps/bin/adagio version 5.22.1-0-g7f404f06 built on Jan  8 2025 15:15:16
+  Build Options: linux oneapi-2024.1.0 release
+    Product: ACME                     (2.9.0)
+    Product: Adagio                   (5.22.1-0-g7f404f06)
+    Product: FEI                      (5.21.00)
+    Product: FETI-DP                  (5.22.1-0-g7f404f06)
+    Product: GDSW                     (5.22.1-0-g7f404f06)
+    Product: Linux                    (4.18.0-553.30.1.el8_10.x86_64)
+    Product: SIERRA Framework         (5.22.1-0-g7f404f06)
+    Product: Sandia Toolkit (STK)     (5.22.1-0-g7f404f06)
+    Product: UtilityLib               (5.22.1-0-g7f404f06)
+---------------------------------------------------
+There were no errors encountered during execution of this procedure
+There were no warnings encountered during execution of this procedure 
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
+Execution complete
 
 
+Timing summary of 1 processor
+                 Timer                   Count       CPU Time                Wall Time
+---------------------------------------- ----- --------------------- -------------------------
+Sierra                                       1 00:00:00.337 (100.0%) 482442:51:53.822 (100.0%)
+
+Took 0.000233889 seconds to generate the table above.
 
 
+Memory summary of 1 processor
+           Metric               Largest          Processor          Smallest         Processor
+---------------------------- -------------- -------------------- -------------- --------------------
+Dynamically Allocated (Heap)        30.9 MB on 0 at 00:00:00.000        30.9 MB on 0 at 00:00:00.000
+Largest Free Fragment (Heap) 1.81366e-01 MB on 0 at 00:00:00.000 1.81366e-01 MB on 0 at 00:00:00.000
+         Total Memory In Use       593.4 MB on 0                       593.4 MB on 0
+           Major Page Faults         0 flts on 0                         0 flts on 0
+
+
+Performance metric summary
+---------------------------------------------------
+Min High-water memory usage 174.5 MB
+Avg High-water memory usage 174.5 MB
+Max High-water memory usage 174.5 MB
+
+Min Available memory per processor 4024.8 MB
+Avg Available memory per processor 4024.8 MB
+Max Available memory per processor 4024.8 MB
+
+Min No-output time 0.3368 sec
+Avg No-output time 0.3368 sec
+Max No-output time 0.3368 sec
+---------------------------------------------------
+There were no errors encountered during parse
+There were no warnings encountered during parse
+There were no errors encountered during execution
+There were no warnings encountered during execution
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
+SIERRA execution successful after 00:00:00 (HH:MM:SS)
+```
+  
+* run test program on cluster (without slurm)
+
+```
+[tvj@bernie 1_SIERRA_Troubleshooting]$ cat hostfile
+cnode001.bernie.cluster
+cnode003.bernie.cluster
+
+[tvj@bernie 1_SIERRA_Troubleshooting]$ mpiexec -n 16 -ppn 8 -f ./hostfile  adagio -i LasagnaOpt_Dynamic.i
+
+[tvj@bernie 1_SIERRA_Troubleshooting]$ tail LasagnaOpt_Dynamic.log 
+Min No-output time 1388.7954 sec
+Avg No-output time 1392.8354 sec
+Max No-output time 1394.2110 sec
+---------------------------------------------------
+There were no errors encountered during parse
+There was 1 warning encountered during parse
+There were no errors encountered during execution
+There were no warnings encountered during execution
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
+SIERRA execution successful after 00:23:21 (HH:MM:SS)
+```
+
+* run test program with `-r ssh` option
+```
+[tvj@bernie 1_SIERRA_Troubleshooting]$ mpiexec -r ssh -n 16 -ppn 8 -f ./hostfile  adagio -i LasagnaOpt_Dynamic.i
+
+[tvj@bernie 1_SIERRA_Troubleshooting]$ tail LasagnaOpt_Dynamic.log 
+Min No-output time 9.5244 sec
+Avg No-output time 9.6027 sec
+Max No-output time 9.6256 sec
+---------------------------------------------------
+There were no errors encountered during parse
+There were no warnings encountered during parse
+There were no errors encountered during execution
+There was 1 warning encountered during execution
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
+SIERRA execution successful after 00:00:09 (HH:MM:SS)
+```
+
+* run test program with `-envlist PATH,LD_LIBRARY_PATH,PWD` option
+```
+[tvj@bernie 1_SIERRA_Troubleshooting]$ mpiexec -r ssh -envlist PATH,LD_LIBRARY_PATH,PWD -n 16 -ppn 8 -f ./hostfile  adagio -i LasagnaOpt_Dynamic.i
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+Abort(2139023) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1613): 
+open_fabric(2695)............: 
+find_provider(2862)..........: OFI fi_getinfo() failed (ofi_init.c:2862:find_provider:No data available)
+```
+
+* run test program via slurm script using `srun adagio -i LasagnaOpt_Dynamic.i`
+```
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
+Executing procedure                                         Jan 14 2025 08:55:52
+
+
+                                     crit. ts     crit. ts
+   step      time      time step    element id   block name       KE           IE           EE        ERROR %        HGE        cpu time    real time
+  ------  ----------   ----------   ----------   ----------     ----------   ----------   ----------   ----------   ----------   ----------   ----------
+0         1.0000e-02   8.6334e-09   379567       shroud         1.3720e-09  -1.3720e-09   0.0000e+00   2.0680e-25   0.0000e+00   1.2248e+02   9.8075e+00
+ro/code/Sierra/sierra_util/domain/Domain.C:415
+    from ResultsOutput::define_model()
+    from sierra::Fmwk::Region::process_output(Real, Int, UInt)
+    from virtual void sierra::sm::Procedure::executeNextStep()
+    from sierra::Domain::execute()
+
+
+SIERRA execution failed after 00:01:53 (HH:MM:SS)
+:SS)
+```
 
 
 
