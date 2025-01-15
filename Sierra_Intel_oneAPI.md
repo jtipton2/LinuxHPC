@@ -167,11 +167,11 @@ IMB-MPI1-GPU        impi_info     mpif90         mpiicpx
 [tvj@bernie bin]$ 
 ```
 
-* simple testing proceedures are located here: https://www.intel.com/content/www/us/en/docs/mpi-library/get-started-guide-linux/2021-14/overview.html
+* ~~simple testing proceedures are located here: https://www.intel.com/content/www/us/en/docs/mpi-library/get-started-guide-linux/2021-14/overview.html~~
 
 > [!TIP]
 > Reading through this guide has been extremely helpful:
-> Intel® MPI Library Developer Guide for Linux* OS
+> *_Intel® MPI Library Developer Guide for Linux* OS_*
 > https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-12/overview.html
 
 ```
