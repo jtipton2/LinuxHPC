@@ -596,9 +596,6 @@ ERROR: Previous command failed (exitcode=255)
 - [ ] https://hpctoolkit.org/
 
 ### Resources to read
-- [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-11/job-schedulers-support.html
-- [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-windows/2021-8/mpiexec-hydra.html
-- [ ] https://community.intel.com/t5/Intel-MPI-Library/Configuration-for-Intel-impi/m-p/1553070#M11253
 - [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/mpi-library-2019-over-libfabric.html
 - [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-linux/2021-8/ofi-capable-network-fabrics-control.html
 - [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/improve-performance-and-stability-with-intel-mpi-library-on-infiniband.html
