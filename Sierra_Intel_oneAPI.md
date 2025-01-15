@@ -592,6 +592,7 @@ ERROR: Previous command failed (exitcode=255)
 ### How to benchmark machine
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
 - [ ] https://mvapich.cse.ohio-state.edu/benchmarks/
+- [ ] https://hpctoolkit.org/
 
 ### Resources to read
 - [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-11/job-schedulers-support.html
