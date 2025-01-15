@@ -582,7 +582,7 @@ ERROR: Previous command failed (exitcode=255)
 * Currently, I compile on the headnode using `x86_64` generic targets.
 * Sierra DevOps recommended compiling on the compute node using the native `ivybridge` target.
 * Spack keeps track of architectures via https://github.com/spack/spack/blob/develop/lib/spack/external/archspec/json/cpu/microarchitectures.json
-* I can see if this worked through an adagio log file which will have `Simd vector width 4' if it works and `2` otherwise.
+* I can see if this worked through an adagio log file which will have `Simd vector width 4` if it works and `2` otherwise.
 
 ### Understanding MPI libfabric
 * Why doesn't `I_MPI_OFI_PROVIDER=mlx` work?
