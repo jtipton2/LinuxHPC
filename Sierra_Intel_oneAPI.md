@@ -135,9 +135,8 @@ export I_MPI_CC=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod
 export I_MPI_CXX=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icpx
 export I_MPI_F77=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
 export I_MPI_F90=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/ifx
-export I_MPI_OFI_PROVIDER=tcp
 #
-# possible other settings to try later
+# not sure how/if these settings are important for my use case...
 #
 export CLASSPATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/share/java/mpi.jar
 export CMPLR_ROOT=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1
@@ -167,7 +166,13 @@ IMB-MPI1            impi_cpuinfo  mpif77         mpiicpc  mpitune_fast
 IMB-MPI1-GPU        impi_info     mpif90         mpiicpx
 [tvj@bernie bin]$ 
 ```
-* followed testing proceedures here: https://www.intel.com/content/www/us/en/docs/mpi-library/get-started-guide-linux/2021-14/overview.html
+
+* simple testing proceedures are located here: https://www.intel.com/content/www/us/en/docs/mpi-library/get-started-guide-linux/2021-14/overview.html
+
+> [!TIP]
+> Reading through this guide has been extremely helpful:
+> Intel® MPI Library Developer Guide for Linux* OS
+> https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-12/overview.html
 
 ```
 [tvj@bernie ~]$ which icx
@@ -199,6 +204,123 @@ MPID_Init(1645)..................:
 MPIDI_OFI_mpi_init_hook(1703)....: 
 insert_addr_table_roots_only(473): OFI get address vector map failed
 ```
+
+```
+[tvj@bernie ~]$ export I_MPI_DEBUG=1
+
+[tvj@bernie ~]$ mpirun -n 1 IMB-MPI1
+[0] MPI startup(): Intel(R) MPI Library, Version 2021.12  Build 20240213 (id: 4f55822)
+[0] MPI startup(): Copyright (C) 2003-2024 Intel Corporation.  All rights reserved.
+[0] MPI startup(): library kind: release
+[0] MPI startup(): libfabric version: 1.18.1-impi
+[0] MPI startup(): libfabric provider: mlx
+[1736959004.001121] [bernie:29714:0]        ib_iface.c:1060 UCX  ERROR ibv_create_cq(cqe=4096) failed: Cannot allocate memory : Please set max locked memory (ulimit -l) to 'unlimited' (current: 64 kbytes)
+Abort(1614735) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init_thread: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1653): 
+create_vni_context(2253).....: OFI endpoint open failed (ofi_init.c:2253:create_vni_context:Input/output error)
+
+[tvj@bernie ~]$ dmesg -T
+[Wed Jan 15 11:37:57 2025] infiniband mlx5_0: create_qp:3047:(pid 29714): Create QP type 2 failed
+[Wed Jan 15 11:37:57 2025] infiniband mlx5_0: create_qp:3047:(pid 29714): Create QP type 9 failed
+[Wed Jan 15 11:37:57 2025] infiniband mlx5_0: create_qp:3047:(pid 29714): Create QP type 4 failed
+```
+
+**Libfrabric Support**
+* This section of the developer guide is very useful
+* Intel MPI Library uses the Open Fabrics Interfaces (OFI) framework which is implemented through libfabric libraries
+* `FI_PROVIDER_PATH` identifies the libfabric provider libraries
+* OFI includes support for mlx, tcp, psm2, psm3, sockets, verbs, and more
+* These can be manually set via `FI_PROVIDER`
+* It appears that IMPI correctly identifies that we have MLX support, however, something is wrong with UCX
+* Let's try some diagnostics:
+
+```
+[tvj@bernie ~]$ fi_info
+provider: mlx
+    fabric: mlx
+    domain: mlx
+    version: 1.4
+    type: FI_EP_UNSPEC
+    protocol: FI_PROTO_MLX
+provider: psm3
+    fabric: IB/OPA-0xfe80000000000000
+    domain: mlx5_0
+    version: 705.1000
+    type: FI_EP_RDM
+    protocol: FI_PROTO_PSMX3
+provider: psm3
+    fabric: IB/OPA-0xfe80000000000000
+    domain: mlx5_0
+    version: 705.1000
+    type: FI_EP_RDM
+    protocol: FI_PROTO_PSMX3
+provider: psm3
+    fabric: IB/OPA-0xfe80000000000000
+    domain: mlx5_0
+    version: 705.1000
+    type: FI_EP_RDM
+    protocol: FI_PROTO_PSMX3
+provider: mlx;ofi_rxm
+    fabric: mlx
+    domain: mlx
+    version: 118.10
+    type: FI_EP_RDM
+    protocol: FI_PROTO_RXM
+provider: tcp
+    fabric: 192.168.201.0/24
+    domain: ib0
+    version: 118.10
+    type: FI_EP_RDM
+    protocol: FI_PROTO_XNET
+
+[tvj@bernie ~]$ ucx_info -v
+# Library version: 1.15.0
+# Library path: /lib64/libucs.so.0
+# API headers version: 1.15.0
+# Git branch '', revision 348d14f
+# Configured with: --build=x86_64-redhat-linux-gnu --host=x86_64-redhat-linux-gnu --program-prefix= --disable-dependency-tracking --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib64 --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/var/lib --mandir=/usr/share/man --infodir=/usr/share/info --disable-optimizations --disable-logging --disable-debug --disable-assertions --disable-params-check --without-java --enable-cma --without-cuda --without-gdrcopy --with-verbs --without-cm --without-knem --with-rdmacm --without-rocm --without-xpmem --without-fuse3 --without-ugni
+
+[tvj@bernie ~]$ lspci | grep Mellanox
+99:00.0 Infiniband controller: Mellanox Technologies MT28908 Family [ConnectX-6]
+
+[tvj@bernie ~]$ ibv_devinfo
+hca_id:	mlx5_0
+	transport:			InfiniBand (0)
+	fw_ver:				20.41.1000
+	node_guid:			a088:c203:0096:05fc
+	sys_image_guid:			a088:c203:0096:05fc
+	vendor_id:			0x02c9
+	vendor_part_id:			4123
+	hw_ver:				0x0
+	board_id:			MT_0000000222
+	phys_port_cnt:			1
+		port:	1
+			state:			PORT_ACTIVE (4)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			35
+			port_lid:		35
+			port_lmc:		0x00
+			link_layer:		InfiniBand
+
+[tvj@bernie ~]$ ucx_info -d | grep Transport
+#      Transport: self
+#      Transport: tcp
+#      Transport: tcp
+#      Transport: tcp
+#      Transport: tcp
+#      Transport: sysv
+#      Transport: posix
+#      Transport: dc_mlx5
+#      Transport: rc_verbs
+#      Transport: rc_mlx5
+#      Transport: ud_verbs
+#      Transport: ud_mlx5
+#      Transport: cma
+```
+
 
 > [!CAUTION]
 > After much trial and error, I discovered that I needed to set `export I_MPI_OFI_PROVIDER=tcp` to get this to work.
