@@ -726,18 +726,11 @@ ERROR: Previous command failed (exitcode=255)
 * Spack keeps track of architectures via https://github.com/spack/spack/blob/develop/lib/spack/external/archspec/json/cpu/microarchitectures.json
 * I can see if this worked through an adagio log file which will have `Simd vector width 4` if it works and `2` otherwise.
 
-### Understanding MPI libfabric
-* Why doesn't `I_MPI_OFI_PROVIDER=mlx` work?
-* `fi_info` output shows `mlx` as an option
-* Is it best practice to just use `tcp` with `IBoIP`?
+### Understanding MPI libfabric OFI provider
+* Is there a speed difference between `mlx` and `tcp` since we also use `IBoIP`?
 
 ### How to benchmark machine
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
 - [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/intel-mpi-benchmarks.html
 - [ ] https://mvapich.cse.ohio-state.edu/benchmarks/
 - [ ] https://hpctoolkit.org/
-
-### Resources to read
-- [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/mpi-library-2019-over-libfabric.html
-- [ ] https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-linux/2021-8/ofi-capable-network-fabrics-control.html
-- [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/improve-performance-and-stability-with-intel-mpi-library-on-infiniband.html
