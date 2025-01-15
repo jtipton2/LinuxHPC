@@ -591,6 +591,7 @@ ERROR: Previous command failed (exitcode=255)
 
 ### How to benchmark machine
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
+- [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/intel-mpi-benchmarks.html
 - [ ] https://mvapich.cse.ohio-state.edu/benchmarks/
 - [ ] https://hpctoolkit.org/
 
