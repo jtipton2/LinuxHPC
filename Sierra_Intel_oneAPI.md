@@ -171,7 +171,7 @@ IMB-MPI1-GPU        impi_info     mpif90         mpiicpx
 
 > [!TIP]
 > Reading through this guide has been extremely helpful:
-> *_Intel® MPI Library Developer Guide for Linux* OS_*
+> ***Intel® MPI Library Developer Guide for Linux OS***
 > https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-12/overview.html
 
 ```
