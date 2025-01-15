@@ -305,41 +305,44 @@ hca_id:	mlx5_0
 			port_lmc:		0x00
 			link_layer:		InfiniBand
 
-[tvj@bernie ~]$ ucx_info -d | grep Transport
+[tvj@bernie ~]$ ucx_info -d | grep Trans
 #      Transport: self
-#      Transport: tcp
 #      Transport: tcp
 #      Transport: tcp
 #      Transport: tcp
 #      Transport: sysv
 #      Transport: posix
-#      Transport: dc_mlx5
+```
+
+> [!IMPORTANT]
+> https://www.intel.com/content/www/us/en/developer/articles/technical/improve-performance-and-stability-with-intel-mpi-library-on-infiniband.html
+> This resource helps to identify the error with lack of dc, rc, and ud transports.
+> This was fixed as follows:
+
+```
+dnf install -y ucx*
+
+ucx_info -d | grep Transp
+#      Transport: self
+#      Transport: tcp
+#      Transport: tcp
+#      Transport: tcp
+#      Transport: sysv
+#      Transport: posix
 #      Transport: rc_verbs
-#      Transport: rc_mlx5
 #      Transport: ud_verbs
-#      Transport: ud_mlx5
 #      Transport: cma
 ```
 
-
-> [!CAUTION]
-> After much trial and error, I discovered that I needed to set `export I_MPI_OFI_PROVIDER=tcp` to get this to work.
-> At first glance, this seems to tell Intel to use ethernet instead of the Mellanox Infiniband.
-> If I try to set `mlx` per this web resource (https://www.intel.com/content/www/us/en/developer/articles/technical/mpi-library-2019-over-libfabric.html) I get an error.
-> I think the key is that `tcp` really uses `IPoIB` which is Infiniband over ethernet.  I can confirm below:
-> ```
-> [tvj@cnode001 ~]$ lsmod | grep ipoib
-> ib_ipoib              147456  0
-> ib_cm                 118784  3 rdma_cm,ib_ipoib,ib_srpt
-> ib_core               405504  12 rdma_cm,ib_ipoib,rpcrdma,mlx4_ib,ib_srpt,iw_cm,ib_iser,ib_umad,ib_isert,rdma_ucm,ib_uverbs,ib_cm
-> ```
-
 ```
-[tvj@bernie ~]$ export I_MPI_OFI_PROVIDER=tcp
-[tvj@bernie ~]$ mpirun -n 2 -ppn 8 -f ./hostfile ./myprog 
-Hello world: rank 0 of 2 running on cnode001.bernie.cluster
-Hello world: rank 1 of 2 running on cnode001.bernie.cluster
-[tvj@bernie ~]$ mpirun -n 16 -ppn 8 -f ./hostfile ./myprog 
+[tvj@bernie ~]$ export FI_PROVIDER=mlx
+[tvj@bernie ~]$ export I_MPI_DEBUG=1
+[tvj@bernie ~]$ mpirun -n 16 -ppn 8 -f ./hostfile ./myprog
+[0] MPI startup(): Intel(R) MPI Library, Version 2021.12  Build 20240213 (id: 4f55822)
+[0] MPI startup(): Copyright (C) 2003-2024 Intel Corporation.  All rights reserved.
+[0] MPI startup(): library kind: release
+[0] MPI startup(): libfabric version: 1.18.1-impi
+[0] MPI startup(): libfabric provider: mlx
 Hello world: rank 0 of 16 running on cnode001.bernie.cluster
 Hello world: rank 1 of 16 running on cnode001.bernie.cluster
 Hello world: rank 2 of 16 running on cnode001.bernie.cluster
@@ -356,8 +359,25 @@ Hello world: rank 12 of 16 running on cnode003.bernie.cluster
 Hello world: rank 13 of 16 running on cnode003.bernie.cluster
 Hello world: rank 14 of 16 running on cnode003.bernie.cluster
 Hello world: rank 15 of 16 running on cnode003.bernie.cluster
-[tvj@bernie ~]$ 
 ```
+
+```
+[tvj@bernie ~]$ mpirun -n 16 -ppn 8 IMB-MPI1
+[0] MPI startup(): Intel(R) MPI Library, Version 2021.12  Build 20240213 (id: 4f55822)
+[0] MPI startup(): Copyright (C) 2003-2024 Intel Corporation.  All rights reserved.
+[0] MPI startup(): library kind: release
+[0] MPI startup(): libfabric version: 1.18.1-impi
+[0] MPI startup(): libfabric provider: mlx
+[1736961102.822146] [bernie:39388:0]        ib_iface.c:1060 UCX  ERROR ibv_create_cq(cqe=4096) failed: Cannot allocate memory : Please set max locked memory (ulimit -l) to 'unlimited' (current: 64 kbytes)
+Abort(1614735) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init_thread: Unknown error class, error stack:
+MPIR_Init_thread(192)........: 
+MPID_Init(1645)..............: 
+MPIDI_OFI_mpi_init_hook(1653): 
+create_vni_context(2253).....: OFI endpoint open failed (ofi_init.c:2253:create_vni_context:Input/output error)
+```
+
+> [!WARNING]
+> I don't know why this error is occurring.  If I set `FI_PROVIDER=tcp`, then the pingpong test code runs without error.
 
 
 
