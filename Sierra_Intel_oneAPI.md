@@ -697,3 +697,10 @@ SIERRA execution successful after 00:23:21 (HH:MM:SS)
 - [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/intel-mpi-benchmarks.html
 - [ ] https://mvapich.cse.ohio-state.edu/benchmarks/
 - [ ] https://hpctoolkit.org/
+- [ ] https://www.top500.org/project/linpack/
+
+### How to setup and administer a HPC
+- [ ] https://en.wikipedia.org/wiki/OpenHPC
+- [ ] https://csrd-conundrums.medium.com/a-basic-hpc-c590cf249dde
+- [ ] https://www.admin-magazine.com/HPC/Articles/Building-an-HPC-Cluster
+- [ ] https://www.admin-magazine.com/HPC/Articles/real_world_hpc_setting_up_an_hpc_cluster
