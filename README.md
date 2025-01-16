@@ -8,12 +8,13 @@ The new HPC is called "BERNIE" and uses a new headnode, a new file server, and a
 
 In this way, I can run a benchmark Sierra explicit simulation to compare performance on the same hardware using different verions of Sierra and different compiler environments.  The table below shows current results.  As you can see, performance on the new cluster _using the same compute hardware_ is about 40% slower.  I'm still troubleshooting my way through understanding (a) if the Infiniband hardware and MPI software are running correctly and (b) how to use the Intel compiler to optimize for the compute node architecture.
 
-Headnode | Compute Nodes | Sierra Version | Environment | Time
---- | --- | --- | --- | ---
-OZ3 | 1 & 3 | v4.56.4 | intel-19.0.3 | 900 s
-BERNIE | 1 & 3 | v5.14 | gcc-8.5.0 | 1,497 s
-BERNIE | 1 & 3 | v5.14 | gcc-10.2.0 | 1,558 s
-BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | 1,415 s
+Headnode | Compute Nodes | Sierra Version | Environment | OFI | Time
+--- | --- | --- | --- | --- | ---
+OZ3 | 1 & 3 | v4.56.4 | intel-19.0.3 | | 900 s
+BERNIE | 1 & 3 | v5.14 | gcc-8.5.0 | | 1,497 s
+BERNIE | 1 & 3 | v5.14 | gcc-10.2.0 | | 1,558 s
+BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | mlx | 1,415 s
+BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | tcp | 1,566 s
 
 My notes are structured as follows:
 
