@@ -361,34 +361,33 @@ Hello world: rank 14 of 16 running on cnode003.bernie.cluster
 Hello world: rank 15 of 16 running on cnode003.bernie.cluster
 ```
 
-```
-[tvj@bernie ~]$ mpirun -n 16 -ppn 8 IMB-MPI1
-[0] MPI startup(): Intel(R) MPI Library, Version 2021.12  Build 20240213 (id: 4f55822)
-[0] MPI startup(): Copyright (C) 2003-2024 Intel Corporation.  All rights reserved.
-[0] MPI startup(): library kind: release
-[0] MPI startup(): libfabric version: 1.18.1-impi
-[0] MPI startup(): libfabric provider: mlx
-[1736961102.822146] [bernie:39388:0]        ib_iface.c:1060 UCX  ERROR ibv_create_cq(cqe=4096) failed: Cannot allocate memory : Please set max locked memory (ulimit -l) to 'unlimited' (current: 64 kbytes)
-Abort(1614735) on node 0 (rank 0 in comm 0): Fatal error in PMPI_Init_thread: Unknown error class, error stack:
-MPIR_Init_thread(192)........: 
-MPID_Init(1645)..............: 
-MPIDI_OFI_mpi_init_hook(1653): 
-create_vni_context(2253).....: OFI endpoint open failed (ofi_init.c:2253:create_vni_context:Input/output error)
-```
-
-> [!WARNING]
-> I don't know why this error is occurring.  If I set `FI_PROVIDER=tcp`, then the pingpong test code runs without error.
-
+> [!IMPORTANT]
+> When switching to the `mlx` libfabric provider, I started to get errors saying `UCX  ERROR ibv_create_cq(cqe=4096) failed: Cannot allocate memory : Please set max locked memory (ulimit -l) to 'unlimited' (current: 64 kbytes)`.
+> It was a struggle to get `ulimit` changed which is apparently related to a bug: https://github.com/clearlinux/distribution/issues/2372
+> Once this was addressed, MPI runs with the `mlx` libfabric provider were fine.
 
 
 ## Testing Slurm with Intel oneAPI
-* `test_mpi.slurm` script
+
+> ***Intel® MPI Library Developer Guide for Linux OS*** \
+> https://www.intel.com/content/www/us/en/docs/mpi-library/developer-guide-linux/2021-12/overview.html \
+> \
+> The Slurm job scheduler can be detected automatically by mpirun and mpiexec. Job scheduler detection is enabled in `mpirun` by default and enabled in `mpiexec` if hostnames are not specified. The only prerequisite is setting `I_MPI_PIN_RESPECT_CPUSET=0`. For autodetection, the Hydra process manger uses these environment variables:
+> - `SLURM_JOBID`
+> - `SLURM_NODELIST`
+> - `SLURM_NNODES`
+> - `SLURM_NTASKS_PER_NODE` or `SLURM_NTASKS`
+> - `SLURM_CPUS_PER_TASK`
+
+
+*`test_mpirun.slurm` script
 ```
 #!/bin/bash
 
 #SBATCH --job-name=test
 #SBATCH --nodes=2
 #SBATCH --ntasks=16
+#SBATCH --cpus-per-task=1
 #SBATCH --time=00:01:00
 #SBATCH --partition=slow
 #SBATCH --mail-user=tvj@ornl.gov
@@ -398,9 +397,9 @@ cd $SLURM_SUBMIT_DIR
 echo "SLURM_SUBMIT_DIR is $SLURM_SUBMIT_DIR"
 
 #
-# Load environment
-# V3:  Sierra v5.22 compiled with Intel oneAPI
+# Load environment modules  
 #
+# V3:  Sierra v5.22 compiled with Intel oneAPI
 export PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/oclfpga/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mkl/2024.2/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/bin:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/bin:/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/bin:$PATH
 export LD_LIBRARY_PATH=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/oclfpga/host/linux64/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/opt/compiler/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mkl/2024.2/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib:/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/mpi/2021.12/lib:/mnt/home/tvj/software/spack/opt/spack/linux-rhel8-x86_64/gcc-8.5.0/gcc-10.2.0-tmw25cg7ifqdxosrybfowaalx25ol5ow/lib64:$LD_LIBRARY_PATH
 export CC=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mod/.spack-env/view/compiler/2024.1/bin/icx
@@ -418,7 +417,24 @@ export I_MPI_F90=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mo
 _SIERRA_INSTALL_DIR=/data/software/Sierra/5.22/install
 export PATH=${_SIERRA_INSTALL_DIR}/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/engine:${_SIERRA_INSTALL_DIR}/tools/contrib/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/job_scripts:${_SIERRA_INSTALL_DIR}/apps/bin:$PATH
 export PYTHONPATH=${_SIERRA_INSTALL_DIR}/tools/tpls/utilities:$PYTHONPATH
-export I_MPI_OFI_PROVIDER=tcp
+export FI_PROVIDER=mlx
+export I_MPI_PIN_RESPECT_CPUSET=0
+
+#
+# Helpful diagnostics for performance troubleshooting
+#
+echo "======== HOSTNAMECTL ========="
+hostnamectl
+
+echo "======== HOST LSCPU ========="
+lscpu
+
+echo "======== SLURM JOB DIAGNOSTICS ========"
+echo "SLURM_JOBID is $SLURM_JOBID"
+echo "SLURM_NODELIST is $SLURM_NODELIST"
+echo "SLURM_NNODES is $SLURM_NNODES"
+echo "SLURM_NTASKS is $SLURM_NTASKS"
+echo "SLURM_CPUS_PER_TASK is $SLURM_CPUS_PER_TASK"
 
 #
 # Compile the code
@@ -428,73 +444,79 @@ mpicc -o mpi_hello_world ./mpi_hello_world.c
 #
 # Run the compiled code
 mpirun ./mpi_hello_world
-#mpiexec ./mpi_hello_world
-#srun --mpi=pmi2 ./mpi_hello_world
-#srun ./mpi_hello_world
 ```
 
-* run script using `srun ./mpi_hello_world`
-```
-SLURM_SUBMIT_DIR is /mnt/home/tvj/Documents
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
-Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode001.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
-Hello world from processor cnode003.bernie.cluster, rank 0 out of 1 processors
-```
 
-* run script using
-  - `srun --mpi=pmi2 ./mpi_hello_world`
-  - `mpirun ./mpi_hello_world`
-  - `mpiexec ./mpi_hello_world`
+* to run using `srun`
+    - `unset I_MPI_PIN_RESPECT_CPUSET`
+    - `export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so`
+    - run the code via `srun --mpi=pmi2 ./mpi_hello_world`
+
+
+* sample output using `sbatch test_mpirun.slurm`
 ```
 SLURM_SUBMIT_DIR is /mnt/home/tvj/Documents
-Hello world from processor cnode003.bernie.cluster, rank 8 out of 16 processors
-Hello world from processor cnode003.bernie.cluster, rank 9 out of 16 processors
-Hello world from processor cnode003.bernie.cluster, rank 15 out of 16 processors
+======== HOSTNAMECTL =========
+   Static hostname: xxxx.xxxx.xxxx
+         Icon name: computer-desktop
+           Chassis: desktop
+        Machine ID: 2c059f75cf924a07a670cbc8b0fdead0
+           Boot ID: 5cf0aef2ccd84f19b07d8f796ec0b8af
+  Operating System: Red Hat Enterprise Linux 8.10 (Ootpa)
+       CPE OS Name: cpe:/o:redhat:enterprise_linux:8::baseos
+            Kernel: Linux 4.18.0-553.22.1.el8_10.x86_64
+      Architecture: x86-64
+======== HOST LSCPU =========
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              8
+On-line CPU(s) list: 0-7
+Thread(s) per core:  1
+Core(s) per socket:  4
+Socket(s):           2
+NUMA node(s):        2
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               62
+Model name:          Intel(R) Xeon(R) CPU E5-2637 v2 @ 3.50GHz
+Stepping:            4
+CPU MHz:             3800.000
+CPU max MHz:         3800.0000
+CPU min MHz:         1200.0000
+BogoMIPS:            7000.41
+Virtualization:      VT-x
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            15360K
+NUMA node0 CPU(s):   0-3
+NUMA node1 CPU(s):   4-7
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm cpuid_fault epb pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt dtherm ida arat pln pts md_clear flush_l1d
+======== SLURM JOB DIAGNOSTICS ========
+SLURM_JOBID is 95
+SLURM_NODELIST is cnode[001,003]
+SLURM_NNODES is 2
+SLURM_NTASKS is 16
+SLURM_CPUS_PER_TASK is 1
+======== COMPILING CODE COMPLETED =========
 Hello world from processor cnode001.bernie.cluster, rank 0 out of 16 processors
 Hello world from processor cnode001.bernie.cluster, rank 1 out of 16 processors
 Hello world from processor cnode001.bernie.cluster, rank 2 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 3 out of 16 processors
 Hello world from processor cnode001.bernie.cluster, rank 4 out of 16 processors
 Hello world from processor cnode001.bernie.cluster, rank 5 out of 16 processors
+Hello world from processor cnode001.bernie.cluster, rank 6 out of 16 processors
 Hello world from processor cnode001.bernie.cluster, rank 7 out of 16 processors
-Hello world from processor cnode001.bernie.cluster, rank 3 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 8 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 9 out of 16 processors
 Hello world from processor cnode003.bernie.cluster, rank 10 out of 16 processors
 Hello world from processor cnode003.bernie.cluster, rank 11 out of 16 processors
 Hello world from processor cnode003.bernie.cluster, rank 12 out of 16 processors
-Hello world from processor cnode001.bernie.cluster, rank 6 out of 16 processors
 Hello world from processor cnode003.bernie.cluster, rank 13 out of 16 processors
 Hello world from processor cnode003.bernie.cluster, rank 14 out of 16 processors
+Hello world from processor cnode003.bernie.cluster, rank 15 out of 16 processors
 ```
-
-
 
 
 ## Compiling Sierra v5.22
