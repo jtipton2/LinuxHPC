@@ -582,15 +582,15 @@ export I_MPI_F90=/mnt/home/tvj/software/spack/var/spack/environments/sierra522mo
 _SIERRA_INSTALL_DIR=/data/software/Sierra/5.22/install
 export PATH=${_SIERRA_INSTALL_DIR}/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/engine:${_SIERRA_INSTALL_DIR}/tools/contrib/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/job_scripts:${_SIERRA_INSTALL_DIR}/apps/bin:$PATH
 export PYTHONPATH=${_SIERRA_INSTALL_DIR}/tools/tpls/utilities:$PYTHONPATH
-export I_MPI_OFI_PROVIDER=tcp
+export FI_PROVIDER=mlx
 ```
   
 * check Sierra executable
 ```
-[tvj@bernie 1_SIERRA_Troubleshooting]$ which adagio
+[tvj@bernie ~]$ which adagio
 /data/software/Sierra/5.22/install/apps/bin/adagio
 
-[tvj@bernie 1_SIERRA_Troubleshooting]$ adagio --version
+[tvj@bernie ~]$ adagio --version
 Application: Adagio
   Executable: /data/software/Sierra/5.22/install/apps/bin/adagio version 5.22.1-0-g7f404f06 built on Jan  8 2025 15:15:16
   Build Options: linux oneapi-2024.1.0 release
@@ -614,33 +614,33 @@ Execution complete
 Timing summary of 1 processor
                  Timer                   Count       CPU Time                Wall Time
 ---------------------------------------- ----- --------------------- -------------------------
-Sierra                                       1 00:00:00.337 (100.0%) 482442:51:53.822 (100.0%)
+Sierra                                       1 00:00:00.302 (100.0%) 482512:00:11.127 (100.0%)
 
-Took 0.000233889 seconds to generate the table above.
+Took 0.00020504 seconds to generate the table above.
 
 
 Memory summary of 1 processor
            Metric               Largest          Processor          Smallest         Processor
 ---------------------------- -------------- -------------------- -------------- --------------------
-Dynamically Allocated (Heap)        30.9 MB on 0 at 00:00:00.000        30.9 MB on 0 at 00:00:00.000
-Largest Free Fragment (Heap) 1.81366e-01 MB on 0 at 00:00:00.000 1.81366e-01 MB on 0 at 00:00:00.000
-         Total Memory In Use       593.4 MB on 0                       593.4 MB on 0
-           Major Page Faults         0 flts on 0                         0 flts on 0
+Dynamically Allocated (Heap)        89.3 MB on 0 at 00:00:00.000        89.3 MB on 0 at 00:00:00.000
+Largest Free Fragment (Heap) 3.06671e-01 MB on 0 at 00:00:00.000 3.06671e-01 MB on 0 at 00:00:00.000
+         Total Memory In Use       721.8 MB on 0                       721.8 MB on 0
+           Major Page Faults       780 flts on 0                       780 flts on 0
 
 
 Performance metric summary
 ---------------------------------------------------
-Min High-water memory usage 174.5 MB
-Avg High-water memory usage 174.5 MB
-Max High-water memory usage 174.5 MB
+Min High-water memory usage 225.4 MB
+Avg High-water memory usage 225.4 MB
+Max High-water memory usage 225.4 MB
 
 Min Available memory per processor 4024.8 MB
 Avg Available memory per processor 4024.8 MB
 Max Available memory per processor 4024.8 MB
 
-Min No-output time 0.3368 sec
-Avg No-output time 0.3368 sec
-Max No-output time 0.3368 sec
+Min No-output time 0.3023 sec
+Avg No-output time 0.3023 sec
+Max No-output time 0.3023 sec
 ---------------------------------------------------
 There were no errors encountered during parse
 There were no warnings encountered during parse
@@ -672,70 +672,14 @@ There were no warnings encountered during execution
 SIERRA execution successful after 00:23:21 (HH:MM:SS)
 ```
 
-* run test program with `-r ssh` option
-```
-[tvj@bernie 1_SIERRA_Troubleshooting]$ mpiexec -r ssh -n 16 -ppn 8 -f ./hostfile  adagio -i LasagnaOpt_Dynamic.i
-
-[tvj@bernie 1_SIERRA_Troubleshooting]$ tail LasagnaOpt_Dynamic.log 
-Min No-output time 9.5244 sec
-Avg No-output time 9.6027 sec
-Max No-output time 9.6256 sec
----------------------------------------------------
-There were no errors encountered during parse
-There were no warnings encountered during parse
-There were no errors encountered during execution
-There was 1 warning encountered during execution
-+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
-SIERRA execution successful after 00:00:09 (HH:MM:SS)
-```
 
 
 
 ## Testing Sierra v5.22 with Slurm
 * see Slurm script above
-* I use a sample explicit problem that is the response of a nested sphere to a rapid thermal expansion due to proton pulse heating.  It captures the physics and simulation workflow that I need for spallation target development.
-* It runs best when invoked via `mpiexec -np ${SLURM_NTASKS} adagio -i LasagnaOpt_Dynamic.i`
-* When invoked via `srun --mpi=pmi2 adagio -i LasagnaOpt_Dynamic.i`, the simulation seems to take much longer to begin.  It also seems to increase the simulation time by ~1% (which could be in the noise... I haven't explored further).
-* When invoked via `sierra --np ${SLURM_NTASKS} --run adagio -i $INPUT_FILENAME`
-  - Sierra appears to be a python script that itself invokes another python script called `launch`.
-  - This then tries to start teh simulation using `mpiexec` with a `-r ssh` option.  This causes a crash as shown.
-  - If I manually remove `-r ssh`, then everything runs fine.  And I also don't need the `- envlist option`.
-  - Oddly enough, when I invoke _outside_ of slurm, I can run `mpiexec` with and without `-r ssh`.
+* I use a sample explicit problem that is the dynamic propagation of elastic stress waves in a nested sphere in response to a rapid thermal expansion (due to proton pulse heating).  It captures the physics and simulation workflow that I need for spallation target development.
+* It can be run from the slurm script via `mpirun adagio -i LasagnaOpt_Dynamic.i`
 
-```
-NOTICE: Found adagio in PATH at /data/software/Sierra/5.22/install/apps/bin/adagio
-***** Executing sierra batch script *****
-Executing: /mnt/home/tvj/Documents/1_SIERRA_Troubleshooting/sierra_batch_script_526691.sh
-
-***** Executing sierra *****
-Executing: launch -n 16 adagio -i LasagnaOpt_Dynamic.i
-Obtained cached build options from '/data/software/Sierra/5.22/install/apps/bin/.build_metadata'
-mpiexec -r ssh -np 16 -envlist PATH,LD_LIBRARY_PATH,PWD adagio -i LasagnaOpt_Dynamic.i
-[mpiexec@cnode001.bernie.cluster] Error: Unable to run bstrap_proxy on cnode003 (pid 526696, exit code 65280)
-[mpiexec@cnode001.bernie.cluster] poll_for_event (../../../../../src/pm/i_hydra/libhydra/demux/hydra_demux_poll.c:157): check exit codes error
-[mpiexec@cnode001.bernie.cluster] HYD_dmx_poll_wait_for_proxy_event (../../../../../src/pm/i_hydra/libhydra/demux/hydra_demux_poll.c:206): poll for event error
-[mpiexec@cnode001.bernie.cluster] HYD_bstrap_setup (../../../../../src/pm/i_hydra/libhydra/bstrap/src/intel/i_hydra_bstrap.c:1063): error waiting for event
-[mpiexec@cnode001.bernie.cluster] Error setting up the bootstrap proxies
-[mpiexec@cnode001.bernie.cluster] Possible reasons:
-[mpiexec@cnode001.bernie.cluster] 1. Host is unavailable. Please check that all hosts are available.
-[mpiexec@cnode001.bernie.cluster] 2. Cannot launch hydra_bstrap_proxy or it crashed on one of the hosts.
-[mpiexec@cnode001.bernie.cluster]    Make sure hydra_bstrap_proxy is available on all hosts and it has right permissions.
-[mpiexec@cnode001.bernie.cluster] 3. Firewall refused connection.
-[mpiexec@cnode001.bernie.cluster]    Check that enough ports are allowed in the firewall and specify them with the I_MPI_PORT_RANGE variable.
-[mpiexec@cnode001.bernie.cluster] 4. Ssh bootstrap cannot launch processes on remote host.
-[mpiexec@cnode001.bernie.cluster]    Make sure that passwordless ssh connection is established across compute hosts.
-[mpiexec@cnode001.bernie.cluster]    You may try using -bootstrap option to select alternative launcher.
-unknown option -- -
-usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-B bind_interface]
-           [-b bind_address] [-c cipher_spec] [-D [bind_address:]port]
-           [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11]
-           [-i identity_file] [-J [user@]host[:port]] [-L address]
-           [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]
-           [-Q query_option] [-R address] [-S ctl_path] [-W host:port]
-           [-w local_tun[:remote_tun]] destination [command]
-Command: 'mpiexec -r ssh -np 16 -envlist PATH,LD_LIBRARY_PATH,PWD adagio -i LasagnaOpt_Dynamic.i' failed with exit status 255
-ERROR: Previous command failed (exitcode=255)
-```
 
 
 
@@ -747,9 +691,6 @@ ERROR: Previous command failed (exitcode=255)
 * Sierra DevOps recommended compiling on the compute node using the native `ivybridge` target.
 * Spack keeps track of architectures via https://github.com/spack/spack/blob/develop/lib/spack/external/archspec/json/cpu/microarchitectures.json
 * I can see if this worked through an adagio log file which will have `Simd vector width 4` if it works and `2` otherwise.
-
-### Understanding MPI libfabric OFI provider
-* Is there a speed difference between `mlx` and `tcp` since we also use `IBoIP`?
 
 ### How to benchmark machine
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
