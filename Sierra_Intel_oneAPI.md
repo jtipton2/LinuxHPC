@@ -721,7 +721,7 @@ x86_64-unknown-linux-gnu
 ```
 * The install ran for around 5 hours and then failed with `/data/software/Sierra/5.22_ivy/build/distro/code/seacas/libraries/svdi/cgi/x11_vdix11.c:429:10: fatal error: 'X11/Xlib.h' file not found`
 * That aside, I was able to look at the `build.log` file and see the compiler options that were being used.  Here's an example:
-  - Note the `-axAVX -msse2` flags
+  - Note the `-O2 -fp-model precise -axAVX -msse2 -diag-disable 381,cpu-dispatch,openmp` flags
   - This seems to be the preferred way for an Ivy Bridge architecture.  I can find the following functions online that seem to suggest there is nothing else specific for Ivy Bridge:  https://gitlab.osti.gov/jmwille/Trilinos/-/blob/b33ad1f915911bc02c7c9f2833a0ef0804893813/packages/stk/stk_simd/Jamfile
   - *How does Sierra identify the machine architecture (i.e. where does it look)?*
   - *Would there be any benefit to compiling with `-O3` and/or `-xAVX` flags?*
