@@ -682,15 +682,57 @@ SIERRA execution successful after 00:23:21 (HH:MM:SS)
 
 
 
+## Optimizing Sierra 5.22 for CPU Architecture
+
+### CPUs and Vectorization
+* From what I can gather, CPUs include single instruction, multiple data (SIMD) "lanes" that are useful for vectorized code. See:
+  -  https://www.cs.umd.edu/users/meesh/411/website/projects/SIMDproj/project.html
+  -  https://stackoverflow.com/questions/31490853/are-different-mmx-sse-and-avx-versions-complementary-or-supersets-of-each-other
+* I was told that Intel Broadwell chips have "4 wide SIMD" and Skylake chips have (8 wide SIMD).
+* The Intel compiler can be made to compile a program to take advantage of a specific CPU architecture via flags.
+  -  One way appears to be with setting `-march` and `-mtune` flags:
+       * https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/2024-1/march.html
+       * https://github.com/spack/spack/blob/develop/lib/spack/external/archspec/json/cpu/microarchitectures.json
+  -  Another way appears to be with setting optimization flags manually:
+       * https://www.nas.nasa.gov/hecc/support/kb/recommended-compiler-options_99.html
+       * https://www.nas.nasa.gov/hecc/support/kb/preparing-to-run-on-pleiades-ivy-bridge-nodes_446.html
+       * https://ri.itservices.manchester.ac.uk/zcsf/software/applications/compilersintel/
+* If I want to experiment with setting Intel flags for Sierra install to use, I might try adding to the `icx.cfg` configuration file:  https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/2024-1/use-compiler-options.html
+
+### Sierra Installation with Optimization of Architecture
+* Sierra DevOps folks recommended that I compile Sierra directly on a compute node to let it optimize itself for that architecture.  I think the `keep-build-dir` option can be used to not automatically delete the build files.
+  -  `python3 /<dir>/source/sierra_unpack.py --verbose --keep-build-dir --procs 4`
+  -  `python3 /<dir>/source/sierra_setup.py --verbose --keep-build-dir --procs 4`
+* The first thing I noticed was that Sierra's spack TPL installation just used the generic `x_86_64` target.  *How does Sierra's spack identify the architecture?*
+* Next, I went poking around the `icx` compiler.  It doesn't appear to be aware of the machine architecture.  *Can I fix this by modifying configuration file settings?*
+```
+[tvj@cnode001 5.22_ivy]$ which icx
+~/software/spack/var/spack/environments/sierra522ivy/.spack-env/view/compiler/2024.1/bin/icx
+
+[tvj@cnode001 5.22_ivy]$ icx --version
+Intel(R) oneAPI DPC++/C++ Compiler 2024.1.0 (2024.1.0.20240308)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /mnt/home/tvj/software/spack/opt/spack/linux-rhel8-ivybridge/gcc-10.2.0/intel-oneapi-compilers-2024.1.0-gantf327qyu4jj42rrlmph6gc4kyk73e/compiler/2024.1/bin/compiler
+Configuration file: /mnt/home/tvj/software/spack/opt/spack/linux-rhel8-ivybridge/gcc-10.2.0/intel-oneapi-compilers-2024.1.0-gantf327qyu4jj42rrlmph6gc4kyk73e/compiler/2024.1/bin/compiler/../icx.cfg
+
+[tvj@cnode001 5.22_ivy]$ icx -dumpmachine
+x86_64-unknown-linux-gnu
+```
+* The install ran for around 5 hours and then failed with `/data/software/Sierra/5.22_ivy/build/distro/code/seacas/libraries/svdi/cgi/x11_vdix11.c:429:10: fatal error: 'X11/Xlib.h' file not found`
+* That aside, I was able to look at the `build.log` file and see the compiler options that were being used.  Here's an example:
+  - Note the `-axAVX -msse2` flags
+  - This seems to be the preferred way for an Ivy Bridge architecture.  I can find the following functions online that seem to suggest there is nothing else specific for Ivy Bridge:  https://gitlab.osti.gov/jmwille/Trilinos/-/blob/b33ad1f915911bc02c7c9f2833a0ef0804893813/packages/stk/stk_simd/Jamfile
+  - *How does Sierra identify the machine architecture (i.e. where does it look)?*
+  - *Would there be any benefit to compiling with `-O3` and/or `-xAVX` flags?*
+```
+[1/43644] sierra_distcc_exec "/mnt/home/tvj/software/spack/var/spack/environments/sierra522ivy/.spack-env/view/compiler/2024.1/bin/icpx" -c -x c++ -std=c++17 -Wall -Wignored-qualifiers -Wno-inconsistent-missing-override -Wno-mismatched-tags -Wno-undefined-var-template -Wno-unused-local-typedef -Wno-unused-private-field -Wno-deprecated-builtins -Wno-vla-cxx-extension -O2 -fp-model precise -axAVX -msse2 -diag-disable 381,cpu-dispatch,openmp -no-fma  -DADDC_ -DBUILT_IN_SIERRA -DBuild64 -DEIGEN_DONT_PARALLELIZE -DEXODUS_SUPPORT -DFMT_SUPPORT -DFORTRAN_ONE_UNDERSCORE -DLC_FLINK -DMPICH_SKIP_MPICXX -DNDEBUG -DSIERRA_DLOPEN_ENABLED -DSIERRA_USE_MKL_LAPACK -DSTK_BUILT_FOR_SIERRA -DSTK_BUILT_WITH_BJAM -DSTK_HIDE_DEPRECATED_CODE -DSTK_SHOW_DEPRECATED_WARNINGS -DUNDERSCORE -I""/mnt/home/tvj/software/spack/var/spack/environments/sierra522ivy/.spack-env/view/mpi/2021.12/include"" -I""/mnt/home/tvj/software/spack/var/spack/environments/sierra522ivy/.spack-env/view/mpi/2021.12/include/mpi"" -I"/data/software/Sierra/5.22_ivy/build/distro/code/FETI-DP" -I"/data/software/Sierra/5.22_ivy/build/distro/code/FETI-DP/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/FETI-DP/src" -I"/data/software/Sierra/5.22_ivy/build/distro/code/Sierra/lapack" -I"/data/software/Sierra/5.22_ivy/build/distro/code/TPLs_src/SparsePack/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/TPLs_src/eigen" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/boost-1.77.0-wuyaibfq6a4by2hcn3yrwopk2ljkb2k4/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/fmt-10.2.1-lsjae2gylk3aiz3uj4fjl3joukjdzf2v/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/hdf5-1.12.3-3t7eckldk2ndssk7vdtn4sfl5il67jot/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/metis-5.1.0-rnci3rzgayq7ma7ltxcowr2kmuqowk66/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/netcdf-c-4.9.2-36vaapkitln57a7v3ffov2b2otyese44/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/parallel-netcdf-1.13.0-67lhb6n5nch5mtphlg2viuu67jsowotr/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/parmetis-4.0.3-yh46bbo5b6543teqv5ssymn4ypy2zoy6/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/scotch-6.0.4-zdzmfw6z3gzz4qihgob3fxpdd7cg7rby/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/superlu-5.2.1-jal4hrul6ltqgp6wolckr5tex5vroxx3/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/trilinos-2024.07.08-kinkvf2ipu5txqsdxel55zotc4zdqheu/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/umfpack-5.1.0-wrgicmqxltgfqojncldyekzbgjbtv2w6/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/y12m-1.0.0-qjvvxv3s6fwq5b6r5rsye7dpyujftojm/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/objs/tpls/spack/spack/__spack_path_placeholder__/__spack_path_placeholder__/__s/linux-rhel8-x86_64/oneapi-2024.1.0/zlib-1.2.13-q5tsnm6yniarpodjwnozuohf3k3oj2mw/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/seacas" -I"/data/software/Sierra/5.22_ivy/build/distro/code/seacas/libraries/aprepro_lib" -I"/data/software/Sierra/5.22_ivy/build/distro/code/seacas/libraries/exodus/include" -I"/data/software/Sierra/5.22_ivy/build/distro/code/seacas/libraries/exodus/sierra" -I"/data/software/Sierra/5.22_ivy/build/distro/code/seacas/libraries/ioss/src" -I"/data/software/Sierra/5.22_ivy/build/distro/code/seacas/libraries/ioss/src/elements" -I"/data/software/Sierra/5.22_ivy/build/distro/code/seacas/libraries/ioss/src/init" -I"/data/software/Sierra/5.22_ivy/build/distro/code/stk/stk_util" -I"/mnt/home/tvj/software/spack/var/spack/environments/sierra522ivy/.spack-env/view/mkl/2024.2/include" -c -o "/data/software/Sierra/5.22_ivy/build/distro/code/objs/apps/FETI-DP/votd/oneapi-linux-2024.1.0/release/address-model-64/architecture-fat_x86/lapack-mkl/mpi-intel/runtime-link-shared/feti_abs.o" "/data/software/Sierra/5.22_ivy/build/distro/code/FETI-DP/src/feti_abs.C" -MMD -MF /data/software/Sierra/5.22_ivy/build/distro/code/objs/apps/FETI-DP/votd/oneapi-linux-2024.1.0/release/address-model-64/architecture-fat_x86/lapack-mkl/mpi-intel/runtime-link-shared/feti_abs.o.d -MT /data/software/Sierra/5.22_ivy/build/distro/code/objs/apps/FETI-DP/votd/oneapi-linux-2024.1.0/release/address-model-64/architecture-fat_x86/lapack-mkl/mpi-intel/runtime-link-shared/feti_abs.o
+```
+
+
+
 
 ## Additional questions and resources to explore
-
-### How to optimize compiling of Sierra
-* The slow queue nodes are `linux-rhel8-ivybridge`
-* Currently, I compile on the headnode using `x86_64` generic targets.
-* Sierra DevOps recommended compiling on the compute node using the native `ivybridge` target.
-* Spack keeps track of architectures via https://github.com/spack/spack/blob/develop/lib/spack/external/archspec/json/cpu/microarchitectures.json
-* I can see if this worked through an adagio log file which will have `Simd vector width 4` if it works and `2` otherwise.
 
 ### How to benchmark machine
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
