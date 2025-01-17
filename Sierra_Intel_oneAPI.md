@@ -717,8 +717,7 @@ x86_64-unknown-linux-gnu
 
 ### Sierra Installation with Optimization of Architecture
 * Sierra DevOps folks recommended that I compile Sierra directly on a compute node to let it optimize itself for that architecture.  I think the `keep-build-dir` option can be used to not automatically delete the build files.
-  -  `python3 /<dir>/source/sierra_unpack.py --verbose --keep-build-dir --procs 8`
-  -  `python3 /<dir>/source/sierra_setup.py --verbose --keep-build-dir --procs 8`
+    -  `python3 /<dir>/source/sierra_setup.py --keep-build-dir --procs 8`
 * The first thing I noticed was that Sierra's spack TPL installation just used the generic `x_86_64` target.  **How does Sierra's spack identify the architecture?**
 * The install ran for around 5 hours and then failed with `/data/software/Sierra/5.22_ivy/build/distro/code/seacas/libraries/svdi/cgi/x11_vdix11.c:429:10: fatal error: 'X11/Xlib.h' file not found`
 * I think I fixed this with `dnf install libX11-devel.x86_64`.  Afterward, I then have `/usr/include/X11/Xlib.h`.
@@ -733,7 +732,6 @@ x86_64-unknown-linux-gnu
 
 ### Next Steps
 - [ ] Recompile on the BERNIE headnode and keep the build files.  Look at the log and see if any of the compile flags changed from what I found on the compute node compile job.
-- [ ] Fix the `X11/Xlib.h` error on the compute node.
 - [ ] Follow-up with Sierra support.
 
 
