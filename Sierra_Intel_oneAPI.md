@@ -738,9 +738,37 @@ x86_64-unknown-linux-gnu
 ```
 * My goal is to see if any further performance can be gained from the compute nodes that are Ivy Bridge configuration.  This is close to the Sandy Bridge option.
 * Per the Sierra DevOps folks:  `/data/software/Sierra/5.22_test/source/sierra_setup.py --procs=48 --keep-build-dir --sierra-build-options="architecture=sandybridge"`
-
-
-
+* First, I note that the build log correctly identifies the Intel compiler and MPI environment:
+```
+REMARK: EXECUTING COMMAND: 'bake --local --verbose -j 48 architecture=sandybridge --installdir=/data/software/Sierra/5.22_test/install/apps --customer=generic --package=base --no-build-cache' in directory '/data/software/Sierra/5.22_test/build/distro/code'
+*********************************************************
+** Identified compiler as 'oneapi', version '2024.1.0' **
+** Identified MPI as 'intelmpi', version '2021.12.1'   **
+*********************************************************
+Building locally with 48 cores.
+REMARK: Using Spack to build phase 1 TPLs
+```
+* Second, I note that the Spack installation of TPLs correctly identifies `arch=linux-rhel8-sandybridge`
+```
+==> Concretized trilinos@2024.07.08
+ -   qoqugp7  trilinos@2024.07.08%oneapi@2024.1.0~cuda~debug~deprecated_warnings~disable_deprecated_code~gcov~ipo+no_complex_float~openmp+panzerexpreval+scotch~shared+shylu_fastilu+umfpack build_system=cmake build_type=Release cxxstd=17 fortran_mangling_underscore=one generator=make gpu_arch=none instrument=none patches=174e222,8f4fcff,b89f749 arch=linux-rhel8-sandybridge
+ -   vbo4l7u      ^boost@1.77.0%oneapi@2024.1.0~atomic~chrono~clanglibcpp~context~coroutine~date_time~debug~exception~fiber+filesystem+graph+graph_parallel~icu~iostreams~locale~log~math+mpi+multithreaded~numpy~pic+program_options~python~random+regex+serialization~shared~signals~singlethreaded+system~taggedlayout~test~thread~timer~versionedlayout~wave build_system=generic cxxstd=17 instrument=none patches=53e4921,6fcc15f,821ef8a,cb4fde1 visibility=hidden arch=linux-rhel8-sandybridge
+ -   el7vf5m      ^cmake@3.25.2%oneapi@2024.1.0~doc~ncurses~openssl+ownlibs~qt build_system=generic build_type=Release arch=linux-rhel8-sandybridge
+[e]  wejwek6      ^gmake@default%oneapi@2024.1.0~guile build_system=autotools patches=ca60bd9 arch=linux-rhel8-sandybridge
+ -   2d2mojr      ^intel-mkl@20240002%oneapi@2024.1.0~ilp64+scalapack+shared build_system=bundle mpi=intel-oneapi-mpi threads=none arch=linux-rhel8-sandybridge
+[e]  mdngzq3      ^intel-oneapi-mpi@2021.12.1%oneapi@2024.1.0+envmods~external-libfabric~generic-names~ilp64 build_system=generic arch=linux-rhel8-sandybridge
+ -   44bucto      ^metis@5.1.0%oneapi@2024.1.0~gdb+int64+real64~shared build_system=generic build_type=Release instrument=none patches=4991da9,5045ae1,72f9699,deba3c2 arch=linux-rhel8-sandybridge
+ -   sae2cdp      ^ninja@1.11.1%oneapi@2024.1.0~re2c build_system=generic arch=linux-rhel8-sandybridge
+[e]  yn3to6w          ^python@default%oneapi@2024.1.0+bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis~optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3+ssl~tkinter+uuid+zlib build_system=generic arch=linux-rhel8-sandybridge
+ -   pxixlrx      ^parmetis@4.0.3%oneapi@2024.1.0~gdb+int64~ipo~shared build_system=cmake build_type=Release generator=make instrument=none patches=0e77a1c,4f89253,50ed208,704b84f arch=linux-rhel8-sandybridge
+ -   x6vbmod      ^scotch@6.0.4%oneapi@2024.1.0+compression~esmumps~int64~metis+mpi~shared build_system=generic patches=740b3e0,779b2a0,fe20c09 arch=linux-rhel8-sandybridge
+[e]  p4fmfop          ^bison@default%oneapi@2024.1.0 build_system=autotools arch=linux-rhel8-sandybridge
+[e]  ckowkcn          ^flex@default%oneapi@2024.1.0+lex~nls build_system=autotools arch=linux-rhel8-sandybridge
+ -   vicjxnf          ^zlib@1.2.13%oneapi@2024.1.0+optimize+pic~shared build_system=makefile arch=linux-rhel8-sandybridge
+ -   sdptf7n      ^superlu@5.2.1%oneapi@2024.1.0~ipo~pic build_system=cmake build_type=Release fortran_mangling_underscore=one generator=make patches=166159d arch=linux-rhel8-sandybridge
+ -   dd3ums2      ^umfpack@5.1.0%oneapi@2024.1.0 build_system=generic fortran_mangling_underscore=one patches=954fe2b arch=linux-rhel8-sandybridge
+ -   elblxz4      ^y12m@1.0.0%oneapi@2024.1.0 build_system=autotools fortran_mangling_underscore=one arch=linux-rhel8-sandybridge
+```
 
 ## Additional questions and resources to explore
 
