@@ -18,7 +18,7 @@ BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | tcp | 1,566 s
 
 My notes are structured as follows:
 
-[Spack](Spack.md) --> Notes about using Spack to setup linux environments with specific software combinations, especially compilers.
+##[Spack](Spack.md)## --> Notes about using Spack to setup linux environments with specific software combinations, especially compilers.
 
 [Sierra_GCC_OpenMPI](Sierra_GCC_OpenMPI.md) --> Notes about testing a GCC/OpenMPI environment, compiling Sierra, and running on Slurm.
 
