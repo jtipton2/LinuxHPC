@@ -11,8 +11,8 @@ In this way, I can run a benchmark Sierra explicit simulation (i.e. adagio) to c
 Headnode | Compute Nodes | Sierra Version | Environment | OFI | Architecture | Time
 --- | --- | --- | --- | --- | --- | ---
 OZ3 | 1 & 3 | v4.56.4 | intel-19.0.3 | | fat_x86 | 900 s
-BERNIE | 1 & 3 | v5.14 | gcc-8.5.0 | | fat_x86 | 1,497 s
-BERNIE | 1 & 3 | v5.14 | gcc-10.2.0 | | fat_x86 | 1,558 s
+BERNIE | 1 & 3 | v5.14 | gcc-8.5.0 | tcp (IPoIB) | fat_x86 | 1,497 s
+BERNIE | 1 & 3 | v5.14 | gcc-10.2.0 | tcp (IPoIB) | fat_x86 | 1,558 s
 BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | tcp (IPoIB) | fat_x86 | 1,566 s
 BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | mlx | fat_x86 | 1,415 s
 BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | mlx | sandybridge | 1,372 s
