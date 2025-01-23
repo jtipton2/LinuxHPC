@@ -779,6 +779,42 @@ REMARK: Using Spack to build phase 1 TPLs
 
 ## Additional questions and resources to explore
 
+### UCX Fabric Errors
+This problem occurs when trying to run a test problem on 8 cpus with 4 procs per node.  The simulation is not able to start when `FI_PROVIDER=mlx'.  Changing to `tcp` allows it to run.
+```
+[tvj@bernie 1_SIERRA_Troubleshooting]$ mpiexec -n 8 -ppn 4 -f ./hostfile  adagio -i LasagnaOpt_Dynamic.i
+[cnode001:915709:0:915709] rc_verbs_iface.c:123  send completion with error: transport retry counter exceeded [qpn 0x18d9 wrid 0x27vendor_err 0x81]
+[cnode001:915709:0:915709] rc_verbs_iface.c:123  [rqpn 0x149b dlid=3 sl=0 port=1 src_path_bits=0]
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 0 PID 915707 RUNNING AT cnode001.bernie.cluster
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 1 PID 915708 RUNNING AT cnode001.bernie.cluster
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 2 PID 915709 RUNNING AT cnode001.bernie.cluster
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 3 PID 915710 RUNNING AT cnode001.bernie.cluster
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================
+[tvj@bernie 1_SIERRA_Troubleshooting]$ unset FI_PROVIDER
+[tvj@bernie 1_SIERRA_Troubleshooting]$ export FI_PROVIDER=tcp
+[tvj@bernie 1_SIERRA_Troubleshooting]$ mpiexec -n 8 -ppn 4 -f ./hostfile  adagio -i LasagnaOpt_Dynamic.i
+[tvj@bernie 1_SIERRA_Troubleshooting]$ 
+```
+
 ### How to benchmark machine
 - [ ] Learn how to run the test and benchmark packages that come with the oneAPI installation
 - [ ] https://www.intel.com/content/www/us/en/developer/articles/technical/intel-mpi-benchmarks.html
