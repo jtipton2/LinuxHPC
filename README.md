@@ -19,7 +19,7 @@ BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | tcp (IPoIB) | fat_x86 | 1,566 s
 BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | mlx | fat_x86 | 1,415 s
 BERNIE | 1 & 3 | v5.22.1 | oneapi-2024.1.0 | mlx | sandybridge | 1,372 s
 
-To try and get a better idea of the impact of communication between nodes, I ran the simulation for 10 &mu;s: with the following results:
+To try and get a better idea of the impact of communication between nodes, I ran the simulation for 10 &mu;s with the following results:
 
 Headnode | Compute Nodes | Sierra Version | Environment | OFI | Architecture | Time
 --- | --- | --- | --- | --- | --- | ---
