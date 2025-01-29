@@ -234,6 +234,9 @@ create_vni_context(2253).....: OFI endpoint open failed (ofi_init.c:2253:create_
 * OFI includes support for mlx, tcp, psm2, psm3, sockets, verbs, and more
 * These can be manually set via `FI_PROVIDER`
 * It appears that IMPI correctly identifies that we have MLX support, however, something is wrong with UCX
+
+## Hardware Driver Troubleshooting
+
 * Let's try some diagnostics:
 
 ```
