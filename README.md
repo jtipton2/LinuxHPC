@@ -2,20 +2,34 @@
 >*Joseph B. Tipton, Jr.*
 >*December 2024 - January 2025*
 
-These are my personal notes as I try to learn how to manage a software environment and compile the Sierra simulation suite on a linux HPC.  My notes are structured as follows:
-
-### [Spack](Spack.md)
-_Notes about using Spack to setup linux environments with specific software combinations, especially compilers._
-
-### [Sierra_GCC_OpenMPI](Sierra_GCC_OpenMPI.md) 
-_Notes about testing a GCC/OpenMPI environment, compiling Sierra, and running on Slurm._
-
-### [Sierra_Intel_oneAPI](Sierra_Intel_oneAPI.md) 
-_Notes about testing an Intel oneAPI environment, compiling Sierra, and running on Slurm._
+These are my personal notes as I try to learn how to manage a software environment and compile the Sierra simulation suite on a linux HPC.  
 
 ## Hardware
 
-Hareware
+The current HPC setup for testing includes the following components:
+* headnode
+  - 2 x Intel Xeon Scalable Gold 6426Y, 2.5GHz (16-Core) "Sapphire Rapids"
+  - 16 x 16GB PC5-38400 4800MHz DDR5 ECC RDIMM
+  - NVIDIA 100-Gigabit HDR100 InfiniBand Adapter (ConnectX-6)
+* network storage
+  - 180TB RAID z2 vdev
+  - NVIDIA 100-Gigabit HDR100 InfiniBand Adapter (ConnectX-6)
+* switch
+  - NVIDIA Mellanox QM8700 - 40-Port Managed HDR InfiniBand 200Gb/s Switch
+* compute nodes (x2)
+  - NVIDIA Mellanox Technologies MT27500 Family (ConnectX-3)
+  - Intel(R) Xeon(R) CPU E5-2637 v2 @ 3.50GHz (8-Core) "Ivy Bridge"
+
+I'm still trying to understand the correct software drivers that should be used for this hardware configuration _specifically as it relates to the Infiniband communication_.  Some notes are found in the  [Intel oneAPI Hardware Driver Troubleshooting](Sierra_Intel_oneAPI.md#hardware-driver-troubleshooting) portion of this project.  Other internet resources are:
+* https://developer.nvidia.com/networking/infiniband-software
+* https://lists.openfabrics.org/pipermail/libfabric-users/2024-May/001037.html
+* OFED
+  - https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/
+  - https://stackoverflow.com/questions/58622347/what-is-the-difference-between-ofed-mlnx-ofed-and-the-inbox-driver
+  - https://www.openfabrics.org/ofed-for-linux/
+  - https://serverfault.com/questions/1048740/infiniband-drivers-ofed-or-distro-included
+* https://easybuild.io/eum22/011_eum22_mpi_easybuild.pdf
+
 
 ## Benchmark Simulation Summary
 
@@ -45,7 +59,18 @@ BERNIE | 1 (4 cpus) & 3 (4 cpus) | v5.22.1 | oneapi-2024.1.0 | tcp | fat_x86 | 1
 
 As you can see, performance on the new cluster _using the same compute hardware_ is about 50% slower.  I'm still troubleshooting to understand the source of this slowdown.
 
+## Software
 
+My notes on learning the software installation process in a Linux environment are structured as follows:
+
+### [Spack](Spack.md)
+_Notes about using Spack to setup linux environments with specific software combinations, especially compilers._
+
+### [Sierra_GCC_OpenMPI](Sierra_GCC_OpenMPI.md) 
+_Notes about testing a GCC/OpenMPI environment, compiling Sierra, and running on Slurm._
+
+### [Sierra_Intel_oneAPI](Sierra_Intel_oneAPI.md) 
+_Notes about testing an Intel oneAPI environment, compiling Sierra, and running on Slurm._
 
 
 
