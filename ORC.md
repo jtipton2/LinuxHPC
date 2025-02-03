@@ -151,7 +151,7 @@ gcc@11.5.0
 
 ## Intel oneAPI Environment
 
-**sierra522.yaml**
+### sierra522.yaml
 ```
 # sierra522.yaml
 # Spack Environment file
@@ -172,7 +172,7 @@ spack:
 ```
 
 
-**Environment Install**
+### Environment Install
 ```
 [cloud@sierra-benchmark software]$ spack env create sierra522 sierra522.yaml
 ==> Created environment sierra522 in: /home/cloud/software/spack/var/spack/environments/sierra522
@@ -214,7 +214,7 @@ spack:
 ```
 
 
-**Environment Variables**
+### Environment Variables
 * explored `env` output to discover what the environment was setting
 * later, I plan to create a custom module... for now, I just set the environment manually via:
 ```
@@ -246,4 +246,162 @@ export LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/
 export CLASSPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/share/java/mpi.jar:.
 export INTELFPGAOCLSDKROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga
 export CPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/include:.
+```
+
+
+### Testing Intel oneAPI installation functionality
+
+```
+[cloud@sierra-benchmark ~]$ which icx
+~/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
+
+[cloud@sierra-benchmark ~]$ icx --version
+Intel(R) oneAPI DPC++/C++ Compiler 2024.1.0 (2024.1.0.20240308)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /home/cloud/software/spack/opt/spack/linux-rocky9-x86_64_v4/gcc-11.5.0/intel-oneapi-compilers-2024.1.0-uwad3jvleomam2b5mtitgsf3jnc2opa5/compiler/2024.1/bin/compiler
+Configuration file: /home/cloud/software/spack/opt/spack/linux-rocky9-x86_64_v4/gcc-11.5.0/intel-oneapi-compilers-2024.1.0-uwad3jvleomam2b5mtitgsf3jnc2opa5/compiler/2024.1/bin/compiler/../icx.cfg
+
+[cloud@sierra-benchmark ~]$ cat hostname
+sierra-benchmark
+
+[cloud@sierra-benchmark ~]$ mpirun -n 1 -ppn 8 -f ./hostname uptime
+ 14:39:14 up 3 days, 48 min,  1 user,  load average: 0.00, 0.00, 0.00
+
+[cloud@sierra-benchmark ~]$ mpiicc -o mpihello /home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/test/test.c
+
+[cloud@sierra-benchmark ~]$ export I_MPI_DEBUG=5
+
+[cloud@sierra-benchmark ~]$ mpirun -n 16 -ppn 32 -f ./hostname ./mpihello
+[0] MPI startup(): Intel(R) MPI Library, Version 2021.12  Build 20240213 (id: 4f55822)
+[0] MPI startup(): Copyright (C) 2003-2024 Intel Corporation.  All rights reserved.
+[0] MPI startup(): library kind: release
+[0] MPI startup(): libfabric version: 1.18.1-impi
+[0] MPI startup(): libfabric provider: tcp
+[0] MPI startup(): Load tuning file: "/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/etc/tuning_generic_shm-ofi.dat"
+[0] MPI startup(): Number of NICs:  1
+[0] MPI startup(): ===== NIC pinning on sierra-benchmark =====
+[0] MPI startup(): Rank    Pin nic
+[0] MPI startup(): 0       eth0
+[0] MPI startup(): 1       eth0
+[0] MPI startup(): 2       eth0
+[0] MPI startup(): 3       eth0
+[0] MPI startup(): 4       eth0
+[0] MPI startup(): 5       eth0
+[0] MPI startup(): 6       eth0
+[0] MPI startup(): 7       eth0
+[0] MPI startup(): 8       eth0
+[0] MPI startup(): 9       eth0
+[0] MPI startup(): 10      eth0
+[0] MPI startup(): 11      eth0
+[0] MPI startup(): 12      eth0
+[0] MPI startup(): 13      eth0
+[0] MPI startup(): 14      eth0
+[0] MPI startup(): 15      eth0
+[0] MPI startup(): ===== CPU pinning =====
+[0] MPI startup(): Rank    Pid      Node name         Pin cpu
+[0] MPI startup(): 0       212192   sierra-benchmark  {0,1}
+[0] MPI startup(): 1       212193   sierra-benchmark  {2,3}
+[0] MPI startup(): 2       212194   sierra-benchmark  {4,5}
+[0] MPI startup(): 3       212195   sierra-benchmark  {6,7}
+[0] MPI startup(): 4       212196   sierra-benchmark  {8,9}
+[0] MPI startup(): 5       212197   sierra-benchmark  {10,11}
+[0] MPI startup(): 6       212198   sierra-benchmark  {12,13}
+[0] MPI startup(): 7       212199   sierra-benchmark  {14,15}
+[0] MPI startup(): 8       212200   sierra-benchmark  {16,17}
+[0] MPI startup(): 9       212201   sierra-benchmark  {18,19}
+[0] MPI startup(): 10      212202   sierra-benchmark  {20,21}
+[0] MPI startup(): 11      212203   sierra-benchmark  {22,23}
+[0] MPI startup(): 12      212204   sierra-benchmark  {24,25}
+[0] MPI startup(): 13      212205   sierra-benchmark  {26,27}
+[0] MPI startup(): 14      212206   sierra-benchmark  {28,29}
+[0] MPI startup(): 15      212207   sierra-benchmark  {30,31}
+[0] MPI startup(): I_MPI_CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
+[0] MPI startup(): I_MPI_CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
+[0] MPI startup(): I_MPI_F90=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+[0] MPI startup(): I_MPI_F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+[0] MPI startup(): I_MPI_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12
+[0] MPI startup(): I_MPI_MPIRUN=mpirun
+[0] MPI startup(): I_MPI_BIND_WIN_ALLOCATE=localalloc
+[0] MPI startup(): I_MPI_HYDRA_TOPOLIB=hwloc
+[0] MPI startup(): I_MPI_RETURN_WIN_MEM_NUMA=-1
+[0] MPI startup(): I_MPI_INTERNAL_MEM_POLICY=default
+[0] MPI startup(): I_MPI_DEBUG=5
+Hello world: rank 0 of 16 running on sierra-benchmark
+Hello world: rank 1 of 16 running on sierra-benchmark
+Hello world: rank 2 of 16 running on sierra-benchmark
+Hello world: rank 3 of 16 running on sierra-benchmark
+Hello world: rank 4 of 16 running on sierra-benchmark
+Hello world: rank 5 of 16 running on sierra-benchmark
+Hello world: rank 6 of 16 running on sierra-benchmark
+Hello world: rank 7 of 16 running on sierra-benchmark
+Hello world: rank 8 of 16 running on sierra-benchmark
+Hello world: rank 9 of 16 running on sierra-benchmark
+Hello world: rank 10 of 16 running on sierra-benchmark
+Hello world: rank 11 of 16 running on sierra-benchmark
+Hello world: rank 12 of 16 running on sierra-benchmark
+Hello world: rank 13 of 16 running on sierra-benchmark
+Hello world: rank 14 of 16 running on sierra-benchmark
+Hello world: rank 15 of 16 running on sierra-benchmark
+```
+
+It is a little odd that it is defalting to `tcp` for the libfabric provider.  Let's try to manually select `shm`, indicating that all processors are on shared memory:
+
+```
+[cloud@sierra-benchmark ~]$ export FI_PROVIDER=shm
+[cloud@sierra-benchmark ~]$ EXPORT I_MPI_FABRICS=shm
+-bash: EXPORT: command not found
+[cloud@sierra-benchmark ~]$ export I_MPI_FABRICS=shm
+[cloud@sierra-benchmark ~]$ mpirun -n 16 -ppn 32 -f ./hostname ./mpihello
+[0] MPI startup(): Intel(R) MPI Library, Version 2021.12  Build 20240213 (id: 4f55822)
+[0] MPI startup(): Copyright (C) 2003-2024 Intel Corporation.  All rights reserved.
+[0] MPI startup(): library kind: release
+[0] MPI startup(): Load tuning file: "/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/etc/tuning_generic_shm.dat"
+[0] MPI startup(): ===== CPU pinning =====
+[0] MPI startup(): Rank    Pid      Node name         Pin cpu
+[0] MPI startup(): 0       212283   sierra-benchmark  {0,1}
+[0] MPI startup(): 1       212284   sierra-benchmark  {2,3}
+[0] MPI startup(): 2       212285   sierra-benchmark  {4,5}
+[0] MPI startup(): 3       212286   sierra-benchmark  {6,7}
+[0] MPI startup(): 4       212287   sierra-benchmark  {8,9}
+[0] MPI startup(): 5       212288   sierra-benchmark  {10,11}
+[0] MPI startup(): 6       212289   sierra-benchmark  {12,13}
+[0] MPI startup(): 7       212290   sierra-benchmark  {14,15}
+[0] MPI startup(): 8       212291   sierra-benchmark  {16,17}
+[0] MPI startup(): 9       212292   sierra-benchmark  {18,19}
+[0] MPI startup(): 10      212293   sierra-benchmark  {20,21}
+[0] MPI startup(): 11      212294   sierra-benchmark  {22,23}
+[0] MPI startup(): 12      212295   sierra-benchmark  {24,25}
+[0] MPI startup(): 13      212296   sierra-benchmark  {26,27}
+[0] MPI startup(): 14      212297   sierra-benchmark  {28,29}
+[0] MPI startup(): 15      212298   sierra-benchmark  {30,31}
+[0] MPI startup(): I_MPI_CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
+[0] MPI startup(): I_MPI_CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
+[0] MPI startup(): I_MPI_F90=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+[0] MPI startup(): I_MPI_F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+[0] MPI startup(): I_MPI_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12
+[0] MPI startup(): I_MPI_MPIRUN=mpirun
+[0] MPI startup(): I_MPI_BIND_WIN_ALLOCATE=localalloc
+[0] MPI startup(): I_MPI_HYDRA_TOPOLIB=hwloc
+[0] MPI startup(): I_MPI_RETURN_WIN_MEM_NUMA=-1
+[0] MPI startup(): I_MPI_INTERNAL_MEM_POLICY=default
+[0] MPI startup(): I_MPI_FABRICS=shm
+[0] MPI startup(): I_MPI_DEBUG=5
+Hello world: rank 0 of 16 running on sierra-benchmark
+Hello world: rank 1 of 16 running on sierra-benchmark
+Hello world: rank 2 of 16 running on sierra-benchmark
+Hello world: rank 3 of 16 running on sierra-benchmark
+Hello world: rank 4 of 16 running on sierra-benchmark
+Hello world: rank 5 of 16 running on sierra-benchmark
+Hello world: rank 6 of 16 running on sierra-benchmark
+Hello world: rank 7 of 16 running on sierra-benchmark
+Hello world: rank 8 of 16 running on sierra-benchmark
+Hello world: rank 9 of 16 running on sierra-benchmark
+Hello world: rank 10 of 16 running on sierra-benchmark
+Hello world: rank 11 of 16 running on sierra-benchmark
+Hello world: rank 12 of 16 running on sierra-benchmark
+Hello world: rank 13 of 16 running on sierra-benchmark
+Hello world: rank 14 of 16 running on sierra-benchmark
+Hello world: rank 15 of 16 running on sierra-benchmark
+[cloud@sierra-benchmark ~]$
 ```
