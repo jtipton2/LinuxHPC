@@ -145,7 +145,7 @@ gcc@11.5.0
 ```
 
 >[!Important]
->Later during the Intel oneAPI install, CMake install gave an error regarding Curl
+>Later during the Intel oneAPI install, CMake install gave an error regarding Curl.  
 >To resolve, I also had to `dnf install libcurl-devel.x86_64`
 
 
@@ -206,5 +206,10 @@ spack:
 [e]  pxe5cvs              ^pkgconf@1.7.3%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
  -   kyh7l2f  intel-oneapi-mpi@2021.12.1%gcc@11.5.0~classic-names+envmods~external-libfabric~generic-names~ilp64 build_system=generic arch=linux-rocky9-x86_64_v4
 
+[sierra522] [cloud@sierra-benchmark software]$ spack install -j 32
+
+[sierra522] [cloud@sierra-benchmark software]$ spack env deactivate
+
+[cloud@sierra-benchmark software]$ spack env activate -p sierra522
 
 ```
