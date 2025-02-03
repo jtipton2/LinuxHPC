@@ -143,3 +143,68 @@ autoconf@2.69  automake@1.16.2  bison@3.7.4  flex@2.6.4  libtool@2.4.6
 -- gcc rocky9-x86_64 --------------------------------------------
 gcc@11.5.0
 ```
+
+>[!Important]
+>Later during the Intel oneAPI install, CMake install gave an error regarding Curl
+>To resolve, I also had to `dnf install libcurl-devel.x86_64`
+
+
+## Intel oneAPI Environment
+
+**sierra522.yaml**
+```
+# sierra522.yaml
+# Spack Environment file
+# Tests an install of packages needed to compile and run Sierra v5.22
+
+spack:
+
+  specs: 
+    - intel-oneapi-compilers@2024.1.0
+    - intel-oneapi-mpi@2021.12.1
+    - intel-oneapi-mkl@2024.2.0+cluster
+
+  view: true
+ 
+  concretizer:
+    unify: true
+    reuse: false
+```
+
+
+**Environment Install**
+```
+[cloud@sierra-benchmark software]$ spack env create sierra522 sierra522.yaml
+==> Created environment sierra522 in: /home/cloud/software/spack/var/spack/environments/sierra522
+==> Activate with: spack env activate sierra522
+
+[cloud@sierra-benchmark software]$ spack env activate -p sierra522
+
+[sierra522] [cloud@sierra-benchmark software]$ spack concretize
+==> Fetching https://ghcr.io/v2/spack/bootstrap-buildcache-v1/blobs/sha256:82ec278bef26c42303a2c2c888612c0d37babef615bc9a0003530e0b8b4d3d2c
+==> Fetching https://ghcr.io/v2/spack/bootstrap-buildcache-v1/blobs/sha256:0c5831932608e7b4084fc6ce60e2b67b77dab76e5515303a049d4d30cd772321
+==> Installing "clingo-bootstrap@=spack%gcc@=10.2.1~docs+ipo+optimized+python+static_libstdcpp build_system=cmake build_type=Release generator=make patches=bebb819,ec99431 arch=linux-centos7-x86_64" from a buildcache
+==> Warning: The default behavior of tarfile extraction has been changed to disallow common exploits (including CVE-2007-4559). By default, absolute/parent paths are disallowed and some mode bits are cleared. See https://access.redhat.com/articles/7004769 for more details.
+==> Concretized 3 specs:
+ -   uwad3jv  intel-oneapi-compilers@2024.1.0%gcc@11.5.0~amd+envmods~nvidia build_system=generic arch=linux-rocky9-x86_64_v4
+ -   2ar6fxk      ^gcc-runtime@11.5.0%gcc@11.5.0 build_system=generic arch=linux-rocky9-x86_64_v4
+[e]  wg5xyks      ^glibc@2.34%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
+ -   ahwnesp      ^patchelf@0.17.2%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
+[e]  n6b3fv4          ^gmake@4.3%gcc@11.5.0~guile build_system=generic patches=599f134 arch=linux-rocky9-x86_64_v4
+ -   evm7ow4  intel-oneapi-mkl@2024.2.0%gcc@11.5.0+cluster+envmods~gfortran~ilp64+shared build_system=generic mpi_family=mpich threads=none arch=linux-rocky9-x86_64_v4
+ -   iw6kavq      ^intel-tbb@2022.0.0%gcc@11.5.0~ipo+shared+tm build_system=cmake build_type=Release cxxstd=default generator=make arch=linux-rocky9-x86_64_v4
+ -   64ovbhr          ^cmake@3.31.5%gcc@11.5.0~doc+ncurses+ownlibs~qtgui build_system=generic build_type=Release arch=linux-rocky9-x86_64_v4
+[e]  bxd4dez              ^curl@7.76.1%gcc@11.5.0+gssapi+ldap~libidn2~librtmp~libssh~libssh2+nghttp2 build_system=autotools libs=shared,static tls=openssl arch=linux-rocky9-x86_64_v4
+ -   kez2ryj              ^ncurses@6.5%gcc@11.5.0~symlinks+termlib abi=none build_system=autotools patches=7a351bc arch=linux-rocky9-x86_64_v4
+ -   l5gd3ws              ^zlib-ng@2.2.3%gcc@11.5.0+compat+new_strategies+opt+pic+shared build_system=autotools arch=linux-rocky9-x86_64_v4
+ -   44zqaq7          ^hwloc@2.11.1%gcc@11.5.0~cairo~cuda~gl~level_zero~libudev+libxml2~nvml~opencl+pci~rocm build_system=autotools libs=shared,static arch=linux-rocky9-x86_64_v4
+ -   r4lgjol              ^libpciaccess@0.17%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
+ -   hcazmcf                  ^util-macros@1.20.1%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
+ -   d7doi3t              ^libxml2@2.13.5%gcc@11.5.0~http+pic~python+shared build_system=autotools arch=linux-rocky9-x86_64_v4
+ -   vxdyael                  ^libiconv@1.17%gcc@11.5.0 build_system=autotools libs=shared,static arch=linux-rocky9-x86_64_v4
+ -   ghvwc6i                  ^xz@5.4.6%gcc@11.5.0~pic build_system=autotools libs=shared,static arch=linux-rocky9-x86_64_v4
+[e]  pxe5cvs              ^pkgconf@1.7.3%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
+ -   kyh7l2f  intel-oneapi-mpi@2021.12.1%gcc@11.5.0~classic-names+envmods~external-libfabric~generic-names~ilp64 build_system=generic arch=linux-rocky9-x86_64_v4
+
+
+```
