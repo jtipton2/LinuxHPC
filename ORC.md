@@ -117,14 +117,29 @@ remote: Total 624261 (delta 79), reused 51 (delta 51), pack-reused 624153 (from 
 Receiving objects: 100% (624261/624261), 210.95 MiB | 4.49 MiB/s, done.
 Resolving deltas: 100% (296544/296544), done.
 Updating files: 100% (12185/12185), done.
-[cloud@sierra-benchmark software]$ ll
-total 4
-drwx------. 10 cloud cloud 4096 Jan 31 15:24 spack
+
 [cloud@sierra-benchmark software]$ source spack/share/spack/setup-env.sh
+
 [cloud@sierra-benchmark software]$ echo $SPACK_ROOT
 /home/cloud/software/spack
+
 [cloud@sierra-benchmark software]$ spack external find
 ==> The following specs have been detected on this system and added to /home/cloud/.spack/packages.yaml
 binutils@2.35.2  curl@7.76.1    findutils@4.8.0  gettext@0.21  gmake@4.3     m4@1.4.19      openssl@3.2.2  pkgconf@1.7.3  tar@1.34
 coreutils@8.32   diffutils@3.7  gawk@5.1.0       git@2.43.5    groff@1.22.4  openssh@8.7p1  perl@5.32.1    sed@4.8        zlib@1.2.11
+autoconf@2.69  automake@1.16.2  bison@3.7.4  flex@2.6.4  libtool@2.4.6
+
+[cloud@sierra-benchmark ~]$ spack compilers
+==> No compilers available. Run `spack compiler find` to autodetect compilers
+
+[cloud@sierra-benchmark ~]$ spack compiler find
+==> Added 1 new compiler to /home/cloud/.spack/linux/compilers.yaml
+    gcc@11.5.0
+==> Compilers are defined in the following files:
+    /home/cloud/.spack/linux/compilers.yaml
+
+[cloud@sierra-benchmark ~]$ spack compilers
+==> Available compilers
+-- gcc rocky9-x86_64 --------------------------------------------
+gcc@11.5.0
 ```
