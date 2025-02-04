@@ -34,18 +34,18 @@ This research used resources from the ORNL Research Cloud Infrastructure at the 
 ## Hardware
 For testing purposes, I've been given an instance with 32 processors and 256 GB of RAM:
 ```
-[cloud@sierra-benchmark ~]$ cat /proc/cpuinfo
+[cloud@tvj-orc-1 ~]$ cat /proc/cpuinfo
 
 ...
 
 processor       : 31
 vendor_id       : AuthenticAMD
-cpu family      : 25
-model           : 160
-model name      : AMD EPYC 9754 128-Core Processor
-stepping        : 2
-microcode       : 0xaa00213
-cpu MHz         : 2250.000
+cpu family      : 23
+model           : 49
+model name      : AMD EPYC 7702 64-Core Processor
+stepping        : 0
+microcode       : 0x830107c
+cpu MHz         : 1996.248
 cache size      : 512 KB
 physical id     : 31
 siblings        : 1
@@ -57,35 +57,35 @@ fpu             : yes
 fpu_exception   : yes
 cpuid level     : 16
 wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx512_bf16 clzero xsaveerptr wbnoinvd arat npt lbrv nrip_save tsc_scale vmcb_clean pausefilter pfthreshold v_vmsave_vmload avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid fsrm arch_capabilities
-bugs            : sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso
-bogomips        : 4500.00
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 clzero xsaveerptr wbnoinvd arat npt nrip_save umip rdpid arch_capabilities
+bugs            : sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb srso
+bogomips        : 3992.49
 TLB size        : 1024 4K pages
 clflush size    : 64
 cache_alignment : 64
-address sizes   : 48 bits physical, 57 bits virtual
+address sizes   : 48 bits physical, 48 bits virtual
 power management:
 ```
 
 ## Software
 
 ```
-[cloud@sierra-benchmark ~]$ gcc -dumpmachine
+[cloud@tvj-orc-1 ~]$ gcc -dumpmachine
 x86_64-redhat-linux
 
-[cloud@sierra-benchmark ~]$ gcc --version
+[cloud@tvj-orc-1 ~]$ gcc --version
 gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-2)
 Copyright (C) 2021 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-[cloud@sierra-benchmark ~]$ python3 --version
+[cloud@tvj-orc-1 ~]$ python3 --version
 Python 3.9.21
 
-[cloud@sierra-benchmark ~]$ sudo su
+[cloud@tvj-orc-1 ~]$ sudo su
 
-[root@sierra-benchmark cloud]# dnf install autoconf automake bison bzip2 diffutils flex libtool m4 python3-devel.x86_64 libX11-devel.x86_64
-Last metadata expiration check: 3:07:55 ago on Mon Feb  3 06:21:22 2025.
+[root@tvj-orc-1 cloud]# dnf install autoconf automake bison bzip2 diffutils flex libtool m4 python3-devel.x86_64 libX11-devel.x86_64 libcurl-devel.x86_64
+Last metadata expiration check: 0:05:44 ago on Tue Feb  4 15:40:56 2025.
 Package autoconf-2.69-39.el9.noarch is already installed.
 Package automake-1.16.2-8.el9.noarch is already installed.
 Package bison-3.7.4-5.el9.x86_64 is already installed.
@@ -96,49 +96,52 @@ Package libtool-2.4.6-46.el9.x86_64 is already installed.
 Package m4-1.4.19-1.el9.x86_64 is already installed.
 Package python3-devel-3.9.21-1.el9_5.x86_64 is already installed.
 Package libX11-devel-1.7.0-9.el9.x86_64 is already installed.
+Package libcurl-devel-7.76.1-31.el9.x86_64 is already installed.
 Dependencies resolved.
 Nothing to do.
 Complete!
 
-[root@sierra-benchmark cloud]# exit
+[root@tvj-orc-1 cloud]# exit
 exit
 ```
 
 ## Spack
 ```
-[cloud@sierra-benchmark ~]$ mkdir software
+[cloud@tvj-orc-1 ~]$ mkdir software
 
-[cloud@sierra-benchmark software]$ git clone https://github.com/spack/spack.git
+[cloud@tvj-orc-1 ~]$ cd software/
+
+[cloud@tvj-orc-1 software]$ git clone https://github.com/spack/spack.git
 Cloning into 'spack'...
-remote: Enumerating objects: 624261, done.
-remote: Counting objects: 100% (108/108), done.
-remote: Compressing objects: 100% (57/57), done.
-remote: Total 624261 (delta 79), reused 51 (delta 51), pack-reused 624153 (from 3)
-Receiving objects: 100% (624261/624261), 210.95 MiB | 4.49 MiB/s, done.
-Resolving deltas: 100% (296544/296544), done.
-Updating files: 100% (12185/12185), done.
+remote: Enumerating objects: 625118, done.
+remote: Counting objects: 100% (716/716), done.
+remote: Compressing objects: 100% (351/351), done.
+remote: Total 625118 (delta 590), reused 365 (delta 365), pack-reused 624402 (from 5)
+Receiving objects: 100% (625118/625118), 212.58 MiB | 2.90 MiB/s, done.
+Resolving deltas: 100% (296865/296865), done.
+Updating files: 100% (12196/12196), done.
 
-[cloud@sierra-benchmark software]$ source spack/share/spack/setup-env.sh
+[cloud@tvj-orc-1 software]$ source spack/share/spack/setup-env.sh
 
-[cloud@sierra-benchmark software]$ echo $SPACK_ROOT
+[cloud@tvj-orc-1 software]$ echo $SPACK_ROOT
 /home/cloud/software/spack
 
-[cloud@sierra-benchmark software]$ spack external find
+[cloud@tvj-orc-1 software]$ spack external find
 ==> The following specs have been detected on this system and added to /home/cloud/.spack/packages.yaml
-binutils@2.35.2  curl@7.76.1    findutils@4.8.0  gettext@0.21  gmake@4.3     m4@1.4.19      openssl@3.2.2  pkgconf@1.7.3  tar@1.34
-coreutils@8.32   diffutils@3.7  gawk@5.1.0       git@2.43.5    groff@1.22.4  openssh@8.7p1  perl@5.32.1    sed@4.8        zlib@1.2.11
-autoconf@2.69  automake@1.16.2  bison@3.7.4  flex@2.6.4  libtool@2.4.6
+autoconf@2.69    bison@3.7.4     diffutils@3.7    gawk@5.1.0    gmake@4.3      m4@1.4.19      perl@5.32.1    tar@1.34
+automake@1.16.2  coreutils@8.32  findutils@4.8.0  gettext@0.21  groff@1.22.4   openssh@8.7p1  pkgconf@1.7.3  zlib@1.2.11
+binutils@2.35.2  curl@7.76.1     flex@2.6.4       git@2.43.5    libtool@2.4.6  openssl@3.2.2  sed@4.8
 
-[cloud@sierra-benchmark ~]$ spack compilers
+[cloud@tvj-orc-1 software]$ spack compilers
 ==> No compilers available. Run `spack compiler find` to autodetect compilers
 
-[cloud@sierra-benchmark ~]$ spack compiler find
+[cloud@tvj-orc-1 software]$ spack compiler find
 ==> Added 1 new compiler to /home/cloud/.spack/linux/compilers.yaml
     gcc@11.5.0
 ==> Compilers are defined in the following files:
     /home/cloud/.spack/linux/compilers.yaml
 
-[cloud@sierra-benchmark ~]$ spack compilers
+[cloud@tvj-orc-1 software]$ spack compilers
 ==> Available compilers
 -- gcc rocky9-x86_64 --------------------------------------------
 gcc@11.5.0
@@ -174,79 +177,53 @@ spack:
 
 ### Environment Install
 ```
-[cloud@sierra-benchmark software]$ spack env create sierra522 sierra522.yaml
+[cloud@tvj-orc-1 software]$ spack env create sierra522 sierra522.yaml
 ==> Created environment sierra522 in: /home/cloud/software/spack/var/spack/environments/sierra522
 ==> Activate with: spack env activate sierra522
 
-[cloud@sierra-benchmark software]$ spack env activate -p sierra522
+[cloud@tvj-orc-1 software]$ spack env activate -p sierra522
 
-[sierra522] [cloud@sierra-benchmark software]$ spack concretize
+[sierra522] [cloud@tvj-orc-1 software]$ spack concretize
 ==> Fetching https://ghcr.io/v2/spack/bootstrap-buildcache-v1/blobs/sha256:82ec278bef26c42303a2c2c888612c0d37babef615bc9a0003530e0b8b4d3d2c
 ==> Fetching https://ghcr.io/v2/spack/bootstrap-buildcache-v1/blobs/sha256:0c5831932608e7b4084fc6ce60e2b67b77dab76e5515303a049d4d30cd772321
 ==> Installing "clingo-bootstrap@=spack%gcc@=10.2.1~docs+ipo+optimized+python+static_libstdcpp build_system=cmake build_type=Release generator=make patches=bebb819,ec99431 arch=linux-centos7-x86_64" from a buildcache
 ==> Warning: The default behavior of tarfile extraction has been changed to disallow common exploits (including CVE-2007-4559). By default, absolute/parent paths are disallowed and some mode bits are cleared. See https://access.redhat.com/articles/7004769 for more details.
 ==> Concretized 3 specs:
- -   uwad3jv  intel-oneapi-compilers@2024.1.0%gcc@11.5.0~amd+envmods~nvidia build_system=generic arch=linux-rocky9-x86_64_v4
- -   2ar6fxk      ^gcc-runtime@11.5.0%gcc@11.5.0 build_system=generic arch=linux-rocky9-x86_64_v4
-[e]  wg5xyks      ^glibc@2.34%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
- -   ahwnesp      ^patchelf@0.17.2%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
-[e]  n6b3fv4          ^gmake@4.3%gcc@11.5.0~guile build_system=generic patches=599f134 arch=linux-rocky9-x86_64_v4
- -   evm7ow4  intel-oneapi-mkl@2024.2.0%gcc@11.5.0+cluster+envmods~gfortran~ilp64+shared build_system=generic mpi_family=mpich threads=none arch=linux-rocky9-x86_64_v4
- -   iw6kavq      ^intel-tbb@2022.0.0%gcc@11.5.0~ipo+shared+tm build_system=cmake build_type=Release cxxstd=default generator=make arch=linux-rocky9-x86_64_v4
- -   64ovbhr          ^cmake@3.31.5%gcc@11.5.0~doc+ncurses+ownlibs~qtgui build_system=generic build_type=Release arch=linux-rocky9-x86_64_v4
-[e]  bxd4dez              ^curl@7.76.1%gcc@11.5.0+gssapi+ldap~libidn2~librtmp~libssh~libssh2+nghttp2 build_system=autotools libs=shared,static tls=openssl arch=linux-rocky9-x86_64_v4
- -   kez2ryj              ^ncurses@6.5%gcc@11.5.0~symlinks+termlib abi=none build_system=autotools patches=7a351bc arch=linux-rocky9-x86_64_v4
- -   l5gd3ws              ^zlib-ng@2.2.3%gcc@11.5.0+compat+new_strategies+opt+pic+shared build_system=autotools arch=linux-rocky9-x86_64_v4
- -   44zqaq7          ^hwloc@2.11.1%gcc@11.5.0~cairo~cuda~gl~level_zero~libudev+libxml2~nvml~opencl+pci~rocm build_system=autotools libs=shared,static arch=linux-rocky9-x86_64_v4
- -   r4lgjol              ^libpciaccess@0.17%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
- -   hcazmcf                  ^util-macros@1.20.1%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
- -   d7doi3t              ^libxml2@2.13.5%gcc@11.5.0~http+pic~python+shared build_system=autotools arch=linux-rocky9-x86_64_v4
- -   vxdyael                  ^libiconv@1.17%gcc@11.5.0 build_system=autotools libs=shared,static arch=linux-rocky9-x86_64_v4
- -   ghvwc6i                  ^xz@5.4.6%gcc@11.5.0~pic build_system=autotools libs=shared,static arch=linux-rocky9-x86_64_v4
-[e]  pxe5cvs              ^pkgconf@1.7.3%gcc@11.5.0 build_system=autotools arch=linux-rocky9-x86_64_v4
- -   kyh7l2f  intel-oneapi-mpi@2021.12.1%gcc@11.5.0~classic-names+envmods~external-libfabric~generic-names~ilp64 build_system=generic arch=linux-rocky9-x86_64_v4
+ -   7c32vbc  intel-oneapi-compilers@2024.1.0%gcc@11.5.0~amd+envmods~nvidia build_system=generic arch=linux-rocky9-zen2
+ -   o2cspv7      ^gcc-runtime@11.5.0%gcc@11.5.0 build_system=generic arch=linux-rocky9-zen2
+[e]  e262tcp      ^glibc@2.34%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
+ -   lmc6yon      ^patchelf@0.17.2%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
+[e]  cwts5y3          ^gmake@4.3%gcc@11.5.0~guile build_system=generic patches=599f134 arch=linux-rocky9-zen2
+ -   tqrtssm  intel-oneapi-mkl@2024.2.0%gcc@11.5.0+cluster+envmods~gfortran~ilp64+shared build_system=generic mpi_family=mpich threads=none arch=linux-rocky9-zen2
+ -   abawspv      ^intel-tbb@2022.0.0%gcc@11.5.0~ipo+shared+tm build_system=cmake build_type=Release cxxstd=default generator=make arch=linux-rocky9-zen2
+ -   ansjzzv          ^cmake@3.31.5%gcc@11.5.0~doc+ncurses+ownlibs~qtgui build_system=generic build_type=Release arch=linux-rocky9-zen2
+[e]  onsz5bl              ^curl@7.76.1%gcc@11.5.0+gssapi+ldap~libidn2~librtmp~libssh~libssh2+nghttp2 build_system=autotools libs=shared,static tls=openssl arch=linux-rocky9-zen2
+ -   oggb5ag              ^ncurses@6.5%gcc@11.5.0~symlinks+termlib abi=none build_system=autotools patches=7a351bc arch=linux-rocky9-zen2
+ -   6dyu3lv              ^zlib-ng@2.2.3%gcc@11.5.0+compat+new_strategies+opt+pic+shared build_system=autotools arch=linux-rocky9-zen2
+ -   gnozufg          ^hwloc@2.11.1%gcc@11.5.0~cairo~cuda~gl~level_zero~libudev+libxml2~nvml~opencl+pci~rocm build_system=autotools libs=shared,static arch=linux-rocky9-zen2
+ -   p3zxrbm              ^libpciaccess@0.17%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
+ -   pf6djdu                  ^util-macros@1.20.1%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
+ -   egacjqs              ^libxml2@2.13.5%gcc@11.5.0~http+pic~python+shared build_system=autotools arch=linux-rocky9-zen2
+ -   opuxs7r                  ^libiconv@1.17%gcc@11.5.0 build_system=autotools libs=shared,static arch=linux-rocky9-zen2
+ -   jyopobr                  ^xz@5.4.6%gcc@11.5.0~pic build_system=autotools libs=shared,static arch=linux-rocky9-zen2
+[e]  t4nfq7p              ^pkgconf@1.7.3%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
+ -   j3wq4hv  intel-oneapi-mpi@2021.12.1%gcc@11.5.0~classic-names+envmods~external-libfabric~generic-names~ilp64 build_system=generic arch=linux-rocky9-zen2
 
-[sierra522] [cloud@sierra-benchmark software]$ spack install -j 32
+[sierra522] [cloud@tvj-orc-1 software]$ spack install -j 32
 
-[sierra522] [cloud@sierra-benchmark software]$ spack env deactivate
+...
 
-[cloud@sierra-benchmark software]$ spack env activate -p sierra522
+[sierra522] [cloud@tvj-orc-1 software]$ spack env deactivate
+
+[cloud@tvj-orc-1 software]$ spack env activate -p sierra522
+
+[sierra522] [cloud@tvj-orc-1 software]$ env > env.out
 ```
 
+>[!NOTE]
+>Use the `env` output to determine how Spack is setting the environment variables.
 
-### Environment Variables
-* explored `env` output to discover what the environment was setting
-* later, I plan to create a custom module... for now, I just set the environment manually via:
-```
-#
-# Environment settings for Sierra 522 MOD
-#
-export PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/bin:$PATH
-export LD_LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/host/linux64/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/compiler/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:$LD_LIBRARY_PATH
-export CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
-export CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
-export FC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
-export F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
-export I_MPI_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12
-export FI_PROVIDER_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib/prov:/usr/lib64/libfabric
-export I_MPI_CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
-export I_MPI_CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
-export I_MPI_F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
-export I_MPI_F90=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
-export MKLROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2
-#
-# not sure how/if these settings are important for my use case...
-#
-export FPGA_VARS_DIR=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga
-export DIAGUTIL_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/etc/compiler/sys_check/sys_check.sh:.
-export MANPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/share/man:/usr/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/man:.:
-export CMAKE_PREFIX_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib/cmake:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view:.
-export CMPLR_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1
-export LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:.
-export CLASSPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/share/java/mpi.jar:.
-export INTELFPGAOCLSDKROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga
-export CPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/include:.
-```
+
 
 
 ### Testing Intel oneAPI installation functionality
@@ -404,4 +381,41 @@ Hello world: rank 13 of 16 running on sierra-benchmark
 Hello world: rank 14 of 16 running on sierra-benchmark
 Hello world: rank 15 of 16 running on sierra-benchmark
 [cloud@sierra-benchmark ~]$
+```
+
+
+
+
+### Environment Variables
+* explored `env` output to discover what the environment was setting
+* later, I plan to create a custom module... for now, I just set the environment manually via:
+```
+#
+# Environment settings for Sierra 522 MOD
+#
+export PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/bin:$PATH
+export LD_LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/host/linux64/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/compiler/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:$LD_LIBRARY_PATH
+export CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
+export CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
+export FC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+export F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+export I_MPI_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12
+export FI_PROVIDER_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib/prov:/usr/lib64/libfabric
+export I_MPI_CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
+export I_MPI_CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
+export I_MPI_F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+export I_MPI_F90=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+export MKLROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2
+#
+# not sure how/if these settings are important for my use case...
+#
+export FPGA_VARS_DIR=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga
+export DIAGUTIL_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/etc/compiler/sys_check/sys_check.sh:.
+export MANPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/share/man:/usr/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/man:.:
+export CMAKE_PREFIX_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib/cmake:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view:.
+export CMPLR_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1
+export LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:.
+export CLASSPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/share/java/mpi.jar:.
+export INTELFPGAOCLSDKROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga
+export CPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/include:.
 ```
