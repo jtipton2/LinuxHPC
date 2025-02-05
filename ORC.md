@@ -110,6 +110,11 @@ exit
 >To resolve, I also had to `dnf install libcurl-devel.x86_64`
 
 
+>[!Important]
+>Also later, the Sierra compile failed with an error that there was no python in `/usr/bin`.  
+>To resolve, I also had to `sudo ln -sf /usr/bin/python3 /usr/bin/python`
+
+
 
 
 ## Spack
