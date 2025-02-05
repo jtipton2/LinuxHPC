@@ -105,6 +105,13 @@ Complete!
 exit
 ```
 
+>[!Important]
+>Later during the Intel oneAPI install, CMake install gave an error regarding Curl.  
+>To resolve, I also had to `dnf install libcurl-devel.x86_64`
+
+
+
+
 ## Spack
 ```
 [cloud@tvj-orc-1 ~]$ mkdir software
@@ -125,6 +132,11 @@ Updating files: 100% (12196/12196), done.
 
 [cloud@tvj-orc-1 software]$ echo $SPACK_ROOT
 /home/cloud/software/spack
+
+[cloud@tvj-orc-1 software]$ spack debug report
+* **Spack:** 1.0.0.dev0 (22c3b4099ff5ea93de258117821482f439e6ef0d)
+* **Python:** 3.9.21
+* **Platform:** linux-rocky9-zen2
 
 [cloud@tvj-orc-1 software]$ spack external find
 ==> The following specs have been detected on this system and added to /home/cloud/.spack/packages.yaml
@@ -147,9 +159,27 @@ binutils@2.35.2  curl@7.76.1     flex@2.6.4       git@2.43.5    libtool@2.4.6  o
 gcc@11.5.0
 ```
 
->[!Important]
->Later during the Intel oneAPI install, CMake install gave an error regarding Curl.  
->To resolve, I also had to `dnf install libcurl-devel.x86_64`
+Sierra is tested on gcc@10.2.0 so I need to install that compiler.  A recent update in Spack now makes that version unsupported, so I'll use the next closest:
+
+```
+[cloud@tvj-orc-1 software]$ spack install -j 32 gcc@10.5.0
+
+[cloud@tvj-orc-1 software]$ spack compiler add "$(spack location -i gcc@10.5.0)"
+
+[cloud@tvj-orc-1 software]$ spack compilers
+==> Available compilers
+-- gcc rocky9-x86_64 --------------------------------------------
+gcc@11.5.0  gcc@10.5.0
+
+[cloud@tvj-orc-1 software]$ spack gc
+
+[cloud@tvj-orc-1 software]$ spack find
+-- linux-rocky9-zen2 / gcc@11.5.0 -------------------------------
+gcc@10.5.0  gcc-runtime@11.5.0  glibc@2.34  gmp@6.3.0  mpc@1.3.1  mpfr@4.2.1  zlib-ng@2.2.3  zstd@1.5.6
+==> 8 installed packages
+```
+
+
 
 
 ## Intel oneAPI Environment
@@ -172,6 +202,11 @@ spack:
   concretizer:
     unify: true
     reuse: false
+
+  packages:
+    all:
+      require:
+      - "%gcc@10.5.0"
 ```
 
 
@@ -184,30 +219,26 @@ spack:
 [cloud@tvj-orc-1 software]$ spack env activate -p sierra522
 
 [sierra522] [cloud@tvj-orc-1 software]$ spack concretize
-==> Fetching https://ghcr.io/v2/spack/bootstrap-buildcache-v1/blobs/sha256:82ec278bef26c42303a2c2c888612c0d37babef615bc9a0003530e0b8b4d3d2c
-==> Fetching https://ghcr.io/v2/spack/bootstrap-buildcache-v1/blobs/sha256:0c5831932608e7b4084fc6ce60e2b67b77dab76e5515303a049d4d30cd772321
-==> Installing "clingo-bootstrap@=spack%gcc@=10.2.1~docs+ipo+optimized+python+static_libstdcpp build_system=cmake build_type=Release generator=make patches=bebb819,ec99431 arch=linux-centos7-x86_64" from a buildcache
-==> Warning: The default behavior of tarfile extraction has been changed to disallow common exploits (including CVE-2007-4559). By default, absolute/parent paths are disallowed and some mode bits are cleared. See https://access.redhat.com/articles/7004769 for more details.
 ==> Concretized 3 specs:
- -   7c32vbc  intel-oneapi-compilers@2024.1.0%gcc@11.5.0~amd+envmods~nvidia build_system=generic arch=linux-rocky9-zen2
- -   o2cspv7      ^gcc-runtime@11.5.0%gcc@11.5.0 build_system=generic arch=linux-rocky9-zen2
-[e]  e262tcp      ^glibc@2.34%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
- -   lmc6yon      ^patchelf@0.17.2%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
-[e]  cwts5y3          ^gmake@4.3%gcc@11.5.0~guile build_system=generic patches=599f134 arch=linux-rocky9-zen2
- -   tqrtssm  intel-oneapi-mkl@2024.2.0%gcc@11.5.0+cluster+envmods~gfortran~ilp64+shared build_system=generic mpi_family=mpich threads=none arch=linux-rocky9-zen2
- -   abawspv      ^intel-tbb@2022.0.0%gcc@11.5.0~ipo+shared+tm build_system=cmake build_type=Release cxxstd=default generator=make arch=linux-rocky9-zen2
- -   ansjzzv          ^cmake@3.31.5%gcc@11.5.0~doc+ncurses+ownlibs~qtgui build_system=generic build_type=Release arch=linux-rocky9-zen2
-[e]  onsz5bl              ^curl@7.76.1%gcc@11.5.0+gssapi+ldap~libidn2~librtmp~libssh~libssh2+nghttp2 build_system=autotools libs=shared,static tls=openssl arch=linux-rocky9-zen2
- -   oggb5ag              ^ncurses@6.5%gcc@11.5.0~symlinks+termlib abi=none build_system=autotools patches=7a351bc arch=linux-rocky9-zen2
- -   6dyu3lv              ^zlib-ng@2.2.3%gcc@11.5.0+compat+new_strategies+opt+pic+shared build_system=autotools arch=linux-rocky9-zen2
- -   gnozufg          ^hwloc@2.11.1%gcc@11.5.0~cairo~cuda~gl~level_zero~libudev+libxml2~nvml~opencl+pci~rocm build_system=autotools libs=shared,static arch=linux-rocky9-zen2
- -   p3zxrbm              ^libpciaccess@0.17%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
- -   pf6djdu                  ^util-macros@1.20.1%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
- -   egacjqs              ^libxml2@2.13.5%gcc@11.5.0~http+pic~python+shared build_system=autotools arch=linux-rocky9-zen2
- -   opuxs7r                  ^libiconv@1.17%gcc@11.5.0 build_system=autotools libs=shared,static arch=linux-rocky9-zen2
- -   jyopobr                  ^xz@5.4.6%gcc@11.5.0~pic build_system=autotools libs=shared,static arch=linux-rocky9-zen2
-[e]  t4nfq7p              ^pkgconf@1.7.3%gcc@11.5.0 build_system=autotools arch=linux-rocky9-zen2
- -   j3wq4hv  intel-oneapi-mpi@2021.12.1%gcc@11.5.0~classic-names+envmods~external-libfabric~generic-names~ilp64 build_system=generic arch=linux-rocky9-zen2
+ -   tfmkwy3  intel-oneapi-compilers@2024.1.0%gcc@10.5.0~amd+envmods~nvidia build_system=generic arch=linux-rocky9-zen2
+ -   j2jvb2x      ^gcc-runtime@10.5.0%gcc@10.5.0 build_system=generic arch=linux-rocky9-zen2
+[e]  uu2ssga      ^glibc@2.34%gcc@10.5.0 build_system=autotools arch=linux-rocky9-zen2
+ -   g2w3tvd      ^patchelf@0.17.2%gcc@10.5.0 build_system=autotools arch=linux-rocky9-zen2
+[e]  ugbzoaq          ^gmake@4.3%gcc@10.5.0~guile build_system=generic patches=599f134 arch=linux-rocky9-zen2
+ -   mk34k5p  intel-oneapi-mkl@2024.2.0%gcc@10.5.0+cluster+envmods~gfortran~ilp64+shared build_system=generic mpi_family=mpich threads=none arch=linux-rocky9-zen2
+ -   uahtckp      ^intel-tbb@2022.0.0%gcc@10.5.0~ipo+shared+tm build_system=cmake build_type=Release cxxstd=default generator=make arch=linux-rocky9-zen2
+ -   7b6hjke          ^cmake@3.31.5%gcc@10.5.0~doc+ncurses+ownlibs~qtgui build_system=generic build_type=Release arch=linux-rocky9-zen2
+[e]  phjasxa              ^curl@7.76.1%gcc@10.5.0+gssapi+ldap~libidn2~librtmp~libssh~libssh2+nghttp2 build_system=autotools libs=shared,static tls=openssl arch=linux-rocky9-zen2
+ -   snnsvia              ^ncurses@6.5%gcc@10.5.0~symlinks+termlib abi=none build_system=autotools patches=7a351bc arch=linux-rocky9-zen2
+ -   ihpi7tu              ^zlib-ng@2.2.3%gcc@10.5.0+compat+new_strategies+opt+pic+shared build_system=autotools arch=linux-rocky9-zen2
+ -   3xtwcjn          ^hwloc@2.11.1%gcc@10.5.0~cairo~cuda~gl~level_zero~libudev+libxml2~nvml~opencl+pci~rocm build_system=autotools libs=shared,static arch=linux-rocky9-zen2
+ -   3ralz5j              ^libpciaccess@0.17%gcc@10.5.0 build_system=autotools arch=linux-rocky9-zen2
+ -   epl2i3z                  ^util-macros@1.20.1%gcc@10.5.0 build_system=autotools arch=linux-rocky9-zen2
+ -   wdurisw              ^libxml2@2.13.5%gcc@10.5.0~http+pic~python+shared build_system=autotools arch=linux-rocky9-zen2
+ -   7yytcfy                  ^libiconv@1.17%gcc@10.5.0 build_system=autotools libs=shared,static arch=linux-rocky9-zen2
+ -   i6am5v3                  ^xz@5.4.6%gcc@10.5.0~pic build_system=autotools libs=shared,static arch=linux-rocky9-zen2
+[e]  mzcft5n              ^pkgconf@1.7.3%gcc@10.5.0 build_system=autotools arch=linux-rocky9-zen2
+ -   k7gwoc3  intel-oneapi-mpi@2021.12.1%gcc@10.5.0~classic-names+envmods~external-libfabric~generic-names~ilp64 build_system=generic arch=linux-rocky9-zen2
 
 [sierra522] [cloud@tvj-orc-1 software]$ spack install -j 32
 
