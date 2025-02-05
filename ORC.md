@@ -481,3 +481,41 @@ Hello world: rank 15 of 16 running on tvj-orc-1
 
 
 
+## Misc. Notes
+
+### Hostname
+
+I had initially set my hostname to `sierra-benchmark`.  The Sierra compile job quickly crashed:
+
+```
+REMARK: EXECUTING COMMAND: 'bake --local --verbose -j 32  --installdir=/home/cloud/software/sierra_5.22/install/apps --customer=generic --package=base --no-build-cache' in directory '/home/cloud/software/sierra_5.22/build/distro/code'
+icpx: error: unknown argument: '-showme:version'
+Traceback (most recent call last):
+  File "/home/cloud/software/sierra_5.22/install/tools/sntools/engine/bake", line 90, in <module>
+    sys.exit(mymodule.run())
+  File "/home/cloud/software/sierra_5.22/install/tools/sntools/engine/lib/bake.py", line 382, in run
+    return BakeEntry().execute()
+  File "/home/cloud/software/sierra_5.22/install/tools/sntools/engine/lib/bake.py", line 54, in __init__
+    if self.data.mpi.vendor == "intelmpi":
+  File "/home/cloud/software/sierra_5.22/install/tools/sntools/runtime_data.py", line 343, in mpi
+    subprocess.check_output(["mpicxx", "-showme:version"])
+  File "/usr/lib64/python3.9/subprocess.py", line 424, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/usr/lib64/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['mpicxx', '-showme:version']' returned non-zero exit status 1.
+REMARK: Command exited with status '1'
+```
+
+The `-showme:version` should only be for the Open MPI environment.  I could correctly test by `mpicxx -compile-info`.  When I look at the `runtime_data.py` file, it seems that somehow the script thinks I am a host_name of `ats2`.  It turns out the `hosts.py` utility has a `hosts` variable that is set by stripping anything past `-` from the hostname.  With `sierra` left, it then thought it was on a local system (listed in `hosts.json`) and overrode the settings.  We found this by putting `print(self.hosts)` in the script as a debug tool.  The fix was to delete the VM instance and give the system a better name.
+
+### GCC version
+
+Rocky9 comes with `gcc@11.5.0` so I thought I'd just try to use that natively.  The Sierra compile failed with an error:
+
+```
+[cloud@tvj-orc-1 sierra_5.22]$ grep "error:" /home/cloud/software/sierra_5.22/build/build.log
+/home/cloud/software/sierra_5.22/build/distro/code/Salinas/util/RandomNumbers.H:24:37: error: unknown type name 'size_t'; did you mean 'std::size_t'?
+```
+
+I then tried to go back to using `gcc@10.2.0` but this is now depreciated on the current version of Spack.  I finally found success with `gcc@10.5.0`.
