@@ -30,6 +30,13 @@ I'm still trying to understand the correct software drivers that should be used 
   - https://serverfault.com/questions/1048740/infiniband-drivers-ofed-or-distro-included
 * https://easybuild.io/eum22/011_eum22_mpi_easybuild.pdf
 
+Questions in the back of my mind are:
+* Should we be using MLX (w/ UCX) or VERBS for the libfabric provider?  What's the difference?  When we installed UCX*, the fabrics named "_verb" appeared.
+* When setting up the HPC, how do you go about configuring the I/O between the head node, media node, and compute nodes?  It seemed the default we had was TCP.  Should we use UCX or VERBS?  How do you go about letting it know we've got 2 ConnectX-3 NIC and 2 ConnectX-6 NIC devices?
+* How do we _know_ that we are using the Infiniband technology for communication?  Is it some sort of speed test to confirm? - IDEA: find a speed test and run it on 2 OZ3 slow nodes and then on BERNIE
+* I've been focusing my efforts on IMPI documentation.  Maybe Mellanox has documentation on hardware configuration?
+* Maybe try to run my test code on 1 node with debug=5 to observe if it is able to choose SHM vs OFI.
+
 
 ## Benchmark Simulation Summary
 
