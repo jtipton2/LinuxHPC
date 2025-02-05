@@ -479,6 +479,116 @@ Hello world: rank 15 of 16 running on tvj-orc-1
 
 
 
+## Sierra Install
+* run installation script
+```
+[cloud@tvj-orc-1 ~]$ SIERRA_ROOT=/home/cloud/software/sierra_5.22
+
+[cloud@tvj-orc-1 ~]$ cd ${SIERRA_ROOT}
+
+[cloud@tvj-orc-1 sierra_5.22]$ /home/cloud/software/source/sierra_setup.py --procs=32 --keep-build-dir
+REMARK: Extracting '/home/cloud/software/source/sandia.tar.gz'
+REMARK: Detected package type 'source'
+REMARK: Building Sierra and logging output to '/home/cloud/software/sierra_5.22/build/build.log'
+
+************************************************************************
+********************* Successfully installed SIERRA ********************
+************************************************************************
+
+To use it run the following command:
+source /home/cloud/software/sierra_5.22/install/sierra_init.sh
+```
+
+* the environment variables script contains
+```
+_SIERRA_INSTALL_DIR=/home/cloud/software/sierra_5.22/install
+export PATH=${_SIERRA_INSTALL_DIR}/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/engine:${_SIERRA_INSTALL_DIR}/tools/contrib/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/job_scripts:${_SIERRA_INSTALL_DIR}/apps/bin:$PATH
+export PYTHONPATH=${_SIERRA_INSTALL_DIR}/tools/tpls/utilities:$PYTHONPATH
+```
+
+* test the executable
+```
+[cloud@tvj-orc-1 sierra_5.22]$ source /home/cloud/software/sierra_5.22/install/sierra_init.sh
+
+[cloud@tvj-orc-1 sierra_5.22]$ which adagio
+~/software/sierra_5.22/install/apps/bin/adagio
+
+[cloud@tvj-orc-1 sierra_5.22]$ adagio --version
+MPI startup(): PMI server not found. Please set I_MPI_PMI_LIBRARY variable if it is not a singleton case.
+[0] MPI startup(): Intel(R) MPI Library, Version 2021.12  Build 20240213 (id: 4f55822)
+[0] MPI startup(): Copyright (C) 2003-2024 Intel Corporation.  All rights reserved.
+[0] MPI startup(): library kind: release
+[0] MPI startup(): Load tuning file: "/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/etc/tuning_generic_shm.dat"
+[0] MPI startup(): ===== CPU pinning =====
+[0] MPI startup(): Rank    Pid      Node name  Pin cpu
+[0] MPI startup(): 0       1197920  tvj-orc-1  0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
+[0] MPI startup(): I_MPI_CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
+[0] MPI startup(): I_MPI_CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
+[0] MPI startup(): I_MPI_F90=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+[0] MPI startup(): I_MPI_F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+[0] MPI startup(): I_MPI_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12
+[0] MPI startup(): I_MPI_FABRICS=shm
+[0] MPI startup(): I_MPI_DEBUG=5
+Application: Adagio
+  Executable: /home/cloud/software/sierra_5.22/install/apps/bin/adagio version 5.22.1-0-g7f404f06 built on Feb  5 2025 11:23:25
+  Build Options: linux oneapi-2024.1.0 release
+    Product: ACME                     (2.9.0)
+    Product: Adagio                   (5.22.1-0-g7f404f06)
+    Product: FEI                      (5.21.00)
+    Product: FETI-DP                  (5.22.1-0-g7f404f06)
+    Product: GDSW                     (5.22.1-0-g7f404f06)
+    Product: Linux                    (5.14.0-503.21.1.el9_5.x86_64)
+    Product: SIERRA Framework         (5.22.1-0-g7f404f06)
+    Product: Sandia Toolkit (STK)     (5.22.1-0-g7f404f06)
+    Product: UtilityLib               (5.22.1-0-g7f404f06)
+---------------------------------------------------
+There were no errors encountered during execution of this procedure
+There were no warnings encountered during execution of this procedure
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
+Execution complete
+
+
+Timing summary of 1 processor
+                 Timer                   Count       CPU Time                Wall Time
+---------------------------------------- ----- --------------------- -------------------------
+Sierra                                       1 00:00:00.071 (100.0%) 482992:40:22.092 (100.0%)
+
+Took 0.00120401 seconds to generate the table above.
+
+
+Memory summary of 1 processor
+           Metric               Largest          Processor          Smallest         Processor
+---------------------------- -------------- -------------------- -------------- --------------------
+Dynamically Allocated (Heap)      2148.4 MB on 0 at 00:00:00.000      2148.4 MB on 0 at 00:00:00.000
+Largest Free Fragment (Heap) 2.35764e-01 MB on 0 at 00:00:00.000 2.35764e-01 MB on 0 at 00:00:00.000
+         Total Memory In Use      2519.6 MB on 0                      2519.6 MB on 0
+           Major Page Faults         0 flts on 0                         0 flts on 0
+
+
+Performance metric summary
+---------------------------------------------------
+Min High-water memory usage 143.6 MB
+Avg High-water memory usage 143.6 MB
+Max High-water memory usage 143.6 MB
+
+Min Available memory per processor 8054.3 MB
+Avg Available memory per processor 8054.3 MB
+Max Available memory per processor 8054.3 MB
+
+Min No-output time 0.0707 sec
+Avg No-output time 0.0707 sec
+Max No-output time 0.0707 sec
+---------------------------------------------------
+There were no errors encountered during parse
+There were no warnings encountered during parse
+There were no errors encountered during execution
+There were no warnings encountered during execution
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
+SIERRA execution successful after 00:00:00 (HH:MM:SS)
+[cloud@tvj-orc-1 sierra_5.22]$
+```
+
 
 
 ## Misc. Notes
