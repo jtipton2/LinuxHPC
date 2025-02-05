@@ -591,6 +591,126 @@ SIERRA execution successful after 00:00:00 (HH:MM:SS)
 
 
 
+## Sierra Test
+
+* set environment
+```
+#
+# Environment settings for Sierra 522
+#
+export PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/bin:/home/cloud/software/spack/opt/spack/linux-rocky9-zen2/gcc-11.5.0/gcc-10.5.0-fcs4ppfe3bzb4bu3bxfzvgg5r5t5cpw6/bin:$PATH
+export LD_LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/host/linux64/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/compiler/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:/home/cloud/software/spack/opt/spack/linux-rocky9-zen2/gcc-11.5.0/gcc-10.5.0-fcs4ppfe3bzb4bu3bxfzvgg5r5t5cpw6/lib64:$LD_LIBRARY_PATH
+export CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
+export CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
+export FC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+export F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+export I_MPI_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12
+export FI_PROVIDER_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib/prov:/usr/lib64/libfabric:.
+export I_MPI_CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
+export I_MPI_CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
+export I_MPI_F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+export I_MPI_F90=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
+export MKLROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2
+#
+# not sure how/if these settings are important for my use case...
+#
+export PKG_CONFIG_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/lib64/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib64/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/share/pkgconfig:.
+export FPGA_VARS_DIR=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga
+export DIAGUTIL_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/etc/compiler/sys_check/sys_check.sh:.
+export MANPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/share/man:/usr/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/man:.:
+export CMAKE_PREFIX_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib/cmake:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view:.
+export CMPLR_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1
+export ACLOCAL_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/share/aclocal:/usr/share/aclocal:.
+export LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:.
+export OCL_ICD_FILENAMES=libintelocl_emu.so:libalteracl.so:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib/libintelocl.so:.
+export CLASSPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/share/java/mpi.jar:.
+export INTELFPGAOCLSDKROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga
+export NLSPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib/compiler/locale/%l_%t/%N:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/share/locale/%l_%t/%N:.
+export CPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/include:.
+#
+# later settings found via troubleshooting
+#
+export FI_PROVIDER=shm
+export I_MPI_FABRICS=shm
+#
+# sierra environment load
+#
+_SIERRA_INSTALL_DIR=/home/cloud/software/sierra_5.22/install
+export PATH=${_SIERRA_INSTALL_DIR}/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/engine:${_SIERRA_INSTALL_DIR}/tools/contrib/bin:${_SIERRA_INSTALL_DIR}/tools/sntools/job_scripts:${_SIERRA_INSTALL_DIR}/apps/bin:$PATH
+export PYTHONPATH=${_SIERRA_INSTALL_DIR}/tools/tpls/utilities:$PYTHONPATH
+```
+
+* run test program
+* I use a sample explicit problem that is the dynamic propagation of elastic stress waves in a nested sphere in response to a rapid thermal expansion (due to proton pulse heating). It captures the physics and simulation workflow that I need for spallation target development.
+
+```
+[cloud@tvj-orc-1 sierratest]$ ll
+total 119728
+-rw-------. 1 cloud cloud     5216 Feb  5 11:50 LasagnaOpt_Dynamic.i
+-rw-------. 1 cloud cloud     5741 Feb  5 11:50 LasagnaOpt_Dynamic.slurm
+-rw-------. 1 cloud cloud 71010020 Feb  5 11:50 LasagnaOpt_Temps.g
+-rw-------. 1 cloud cloud 51540580 Feb  5 11:50 LasagnaOpt_noShell.g
+-rw-------. 1 cloud cloud    22693 Feb  5 11:50 MatlProps_Structural.i
+-rw-------. 1 cloud cloud      692 Feb  5 11:50 README.txt
+
+[cloud@tvj-orc-1 sierratest]$ decomp --processors 32 LasagnaOpt_noShell.g >> decomp.log 2>&1
+
+[cloud@tvj-orc-1 sierratest]$ decomp --processors 32 LasagnaOpt_Temps.g >> decomp.log 2>&1
+
+[cloud@tvj-orc-1 sierratest]$ cat hostfile
+tvj-orc-1
+
+[cloud@tvj-orc-1 sierratest]$ mpiexec -n 32 -ppn 32 -f ./hostfile adagio -i LasagnaOpt_Dynamic.i
+
+[cloud@tvj-orc-1 sierratest]$ epu -add_processor -processor_count 32 -extension e LasagnaOpt_Dynamic_Block_Pulses >> epu.log 2>&1
+
+[cloud@tvj-orc-1 sierratest]$ epu -add_processor -processor_count 32 -extension e LasagnaOpt_Dynamic_Shroud_Pulses >> epu.log 2>&1
+
+[cloud@tvj-orc-1 sierratest]$ rm *.e.* *.g.*
+```
+
+* The head of the `LasagnaOpt_Dynamic.log` file shows `Simd vector width 2`.  I might be able to improve that if I can figure out how to compile for Zen2 processors.
+```
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
+
+        Directory /home/cloud/sierratest/
+       Executable /home/cloud/software/sierra_5.22/install/apps/bin/adagio
+            Built Feb  5 2025 11:23:25
+    Build Options linux oneapi-2024.1.0 release
+      Run Started Feb  5 2025 12:01:27
+             User cloud
+     Architecture tvj-orc-1
+             Host tvj-orc-1
+         Hardware x86_64
+          Running Linux
+       Processors 32
+Simd vector width 2
+
+      Product                  Version            Qualifier
+-------------------- ---------------------------- ---------
+                ACME 2.9.0
+              Adagio 5.22.1-0-g7f404f06
+                 FEI 5.21.00
+             FETI-DP 5.22.1-0-g7f404f06
+                GDSW 5.22.1-0-g7f404f06
+               Linux 5.14.0-503.21.1.el9_5.x86_64
+    SIERRA Framework 5.22.1-0-g7f404f06
+Sandia Toolkit (STK) 5.22.1-0-g7f404f06
+          UtilityLib 5.22.1-0-g7f404f06
+
++----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----
+Reading LasagnaOpt_Dynamic.i                                Feb  5 2025 12:01:28
+```
+
+* The tail of the `LasagnaOpt_Dynamic.log` file shows the fastest speed I've seen yet!!
+```
+### Total Wall Clock Run Time Used ###: 523.53
+### Total Number of Steps Taken ###: 2317
+```
+
+
+
+
 ## Misc. Notes
 
 ### Hostname
