@@ -702,11 +702,19 @@ Sandia Toolkit (STK) 5.22.1-0-g7f404f06
 Reading LasagnaOpt_Dynamic.i                                Feb  5 2025 12:01:28
 ```
 
-* The tail of the `LasagnaOpt_Dynamic.log` file shows the fastest speed I've seen yet!!
+* The tail of the `LasagnaOpt_Dynamic.log` file shows the speed of execution:
 ```
 ### Total Wall Clock Run Time Used ###: 523.53
 ### Total Number of Steps Taken ###: 2317
 ```
+
+* And when I run with 16 procs:
+```
+### Total Wall Clock Run Time Used ###: 995.39
+### Total Number of Steps Taken ###: 2317
+```
+
+* This compares with ~900 seconds that I was seeing on the OZ3 cluster with slow queue.  I think I can declare success at this point!
 
 
 
