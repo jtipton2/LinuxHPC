@@ -261,16 +261,16 @@ spack:
 * later, I plan to create a custom module... for now, I just set the environment manually via:
 ```
 #
-# Environment settings for Sierra 522 MOD
+# Environment settings for Sierra 522
 #
-export PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/bin:$PATH
-export LD_LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/host/linux64/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/compiler/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:$LD_LIBRARY_PATH
+export PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/bin:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/bin:/home/cloud/software/spack/opt/spack/linux-rocky9-zen2/gcc-11.5.0/gcc-10.5.0-fcs4ppfe3bzb4bu3bxfzvgg5r5t5cpw6/bin:$PATH
+export LD_LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/host/linux64/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/compiler/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:/home/cloud/software/spack/opt/spack/linux-rocky9-zen2/gcc-11.5.0/gcc-10.5.0-fcs4ppfe3bzb4bu3bxfzvgg5r5t5cpw6/lib64:$LD_LIBRARY_PATH
 export CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
 export CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
 export FC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
 export F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
 export I_MPI_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12
-export FI_PROVIDER_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib/prov:/usr/lib64/libfabric
+export FI_PROVIDER_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/opt/mpi/libfabric/lib/prov:/usr/lib64/libfabric:.
 export I_MPI_CC=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
 export I_MPI_CXX=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icpx
 export I_MPI_F77=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/ifx
@@ -279,23 +279,22 @@ export MKLROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spac
 #
 # not sure how/if these settings are important for my use case...
 #
-export PKG_CONFIG_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/lib64/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib64/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/share/pkgconfig:.
+export PKG_CONFIG_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/lib64/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib64/pkgconfig:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/share/pkgconfig:.
 export FPGA_VARS_DIR=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga
 export DIAGUTIL_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/etc/compiler/sys_check/sys_check.sh:.
 export MANPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/share/man:/usr/share/man:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/man:.:
-export CMAKE_PREFIX_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib/cmake:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view:.
+export CMAKE_PREFIX_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib/cmake:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view:.
 export CMPLR_ROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1
 export ACLOCAL_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/share/aclocal:/usr/share/aclocal:.
-export LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:.
-export OCL_ICD_FILENAMES=libintelocl_emu.so:libalteracl.so:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib/libintelocl.so
+export LIBRARY_PATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/lib:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/lib:.
+export OCL_ICD_FILENAMES=libintelocl_emu.so:libalteracl.so:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib/libintelocl.so:.
 export CLASSPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/share/java/mpi.jar:.
 export INTELFPGAOCLSDKROOT=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga
-export NLSPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/share/locale/%l_%t/%N:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib/compiler/locale/%l_%t/%N:.
-export CPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/include:.
+export NLSPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/lib/compiler/locale/%l_%t/%N:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/share/locale/%l_%t/%N:.
+export CPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/opt/oclfpga/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mkl/2024.2/include:/home/cloud/software/spack/var/spack/environments/sierra522/.spack-env/view/mpi/2021.12/include:.
 #
 # later settings found via troubleshooting
 #
-alias python=python3
 export FI_PROVIDER=shm
 export I_MPI_FABRICS=shm
 ```
@@ -306,6 +305,18 @@ export I_MPI_FABRICS=shm
 ### Testing Intel oneAPI installation functionality
 
 ```
+[cloud@tvj-orc-1 ~]$ which gcc
+~/software/spack/opt/spack/linux-rocky9-zen2/gcc-11.5.0/gcc-10.5.0-fcs4ppfe3bzb4bu3bxfzvgg5r5t5cpw6/bin/gcc
+
+[cloud@tvj-orc-1 ~]$ gcc --version
+gcc (Spack GCC) 10.5.0
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[cloud@tvj-orc-1 ~]$ which icx
+~/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
+
 [cloud@tvj-orc-1 ~]$ which icx
 ~/software/spack/var/spack/environments/sierra522/.spack-env/view/compiler/2024.1/bin/icx
 
@@ -313,8 +324,8 @@ export I_MPI_FABRICS=shm
 Intel(R) oneAPI DPC++/C++ Compiler 2024.1.0 (2024.1.0.20240308)
 Target: x86_64-unknown-linux-gnu
 Thread model: posix
-InstalledDir: /home/cloud/software/spack/opt/spack/linux-rocky9-zen2/gcc-11.5.0/intel-oneapi-compilers-2024.1.0-7c32vbcpvdxyz4qymd6b2mmg6lh75y2m/compiler/2024.1/bin/compiler
-Configuration file: /home/cloud/software/spack/opt/spack/linux-rocky9-zen2/gcc-11.5.0/intel-oneapi-compilers-2024.1.0-7c32vbcpvdxyz4qymd6b2mmg6lh75y2m/compiler/2024.1/bin/compiler/../icx.cfg
+InstalledDir: /home/cloud/software/spack/opt/spack/linux-rocky9-zen2/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-tfmkwy3xabqoecs6uqyctxv7e43pqpk6/compiler/2024.1/bin/compiler
+Configuration file: /home/cloud/software/spack/opt/spack/linux-rocky9-zen2/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-tfmkwy3xabqoecs6uqyctxv7e43pqpk6/compiler/2024.1/bin/compiler/../icx.cfg
 
 [cloud@tvj-orc-1 ~]$ cat hostfile
 tvj-orc-1
