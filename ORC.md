@@ -715,8 +715,16 @@ Reading LasagnaOpt_Dynamic.i                                Feb  5 2025 12:01:28
 ```
 
 * This compares with ~900 seconds that I was seeing on the OZ3 cluster with slow queue.  I think I can declare success at this point!
+* The ORC administrator next granted me access to a full node with an allotment of 250 cpus.  According to `lscpu`, the node used AMD EPYC 9754 128-Core Processors.  When I ran `cpuinfo`, it appeared that all 250 cpus were on the same socket.  That ended up creating problems when I tried to run the test case on anything more than 127 procs.  They were able to fix this, and I was able to run the test case to check scaling:
 
-
+Arch | Procs | Time (s)
+--- | ---: | ---:
+AMD EPYC 7702 | 16 | 995
+AMD EPYC 7702 | 32 | 524
+AMD EPYC 9754 | 64 | 232
+AMD EPYC 9754 | 128 | 146
+AMD EPYC 9754 | 200 | 99
+AMD EPYC 9754 | 250 | 84
 
 
 ## Misc. Notes
