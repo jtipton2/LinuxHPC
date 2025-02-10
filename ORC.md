@@ -214,6 +214,10 @@ spack:
       - "%gcc@10.5.0"
 ```
 
+> [!IMPORTANT]  
+> The require `%gcc@10.5.0` tells Spack to compile the Intel oneAPI environment with a GCC@10.5.0 backend, instead of the OS default compiler.
+
+
 
 ### Environment Install
 ```
@@ -303,6 +307,11 @@ export CPATH=/home/cloud/software/spack/var/spack/environments/sierra522/.spack-
 export FI_PROVIDER=shm
 export I_MPI_FABRICS=shm
 ```
+
+> [!IMPORTANT]  
+> * I had to manually append the PATH variable with the `bin` directory of GCC@10.5.0
+> * I had to manually append the LD_LIBRARY_PATH variable with the 'lib64' directory of GCC@10.5.0
+> * I had to add `I_MPI_CC`, `I_MPI_CXX`, `I_MPI_F77`, `I_MPI_F90`, to point to the corresponding Intel compilers.  Otherwise, the MPI compilers would try to look for the old `icc` classic Intel compilers which are depreciated.
 
 
 
