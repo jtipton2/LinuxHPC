@@ -4,40 +4,6 @@
 
 These are my personal notes as I try to learn how to manage a software environment and compile the Sierra simulation suite on a linux HPC.  
 
-## Hardware
-
-The current HPC setup for testing includes the following components:
-* headnode
-  - 2 x Intel Xeon Scalable Gold 6426Y, 2.5GHz (16-Core) "Sapphire Rapids"
-  - 16 x 16GB PC5-38400 4800MHz DDR5 ECC RDIMM
-  - NVIDIA 100-Gigabit HDR100 InfiniBand Adapter (ConnectX-6)
-* network storage
-  - 180TB RAID z2 vdev
-  - NVIDIA 100-Gigabit HDR100 InfiniBand Adapter (ConnectX-6)
-* switch
-  - NVIDIA Mellanox QM8700 - 40-Port Managed HDR InfiniBand 200Gb/s Switch
-* compute nodes (x2)
-  - NVIDIA Mellanox Technologies MT27500 Family (ConnectX-3)
-  - Intel(R) Xeon(R) CPU E5-2637 v2 @ 3.50GHz (8-Core) "Ivy Bridge"
-
-I'm still trying to understand the correct software drivers that should be used for this hardware configuration _specifically as it relates to the Infiniband communication_.  Some notes are found in the  [Intel oneAPI Hardware Driver Troubleshooting](Sierra_Intel_oneAPI.md#hardware-driver-troubleshooting) portion of this project.  Other internet resources are:
-* https://developer.nvidia.com/networking/infiniband-software
-* https://lists.openfabrics.org/pipermail/libfabric-users/2024-May/001037.html
-* OFED
-  - https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/
-  - https://stackoverflow.com/questions/58622347/what-is-the-difference-between-ofed-mlnx-ofed-and-the-inbox-driver
-  - https://www.openfabrics.org/ofed-for-linux/
-  - https://serverfault.com/questions/1048740/infiniband-drivers-ofed-or-distro-included
-* https://easybuild.io/eum22/011_eum22_mpi_easybuild.pdf
-
-Questions in the back of my mind are:
-* Should we be using MLX (w/ UCX) or VERBS for the libfabric provider?  What's the difference?  When we installed UCX*, the fabrics named "_verb" appeared.
-* When setting up the HPC, how do you go about configuring the I/O between the head node, media node, and compute nodes?  It seemed the default we had was TCP.  Should we use UCX or VERBS?  How do you go about letting it know we've got 2 ConnectX-3 NIC and 2 ConnectX-6 NIC devices?
-* How do we _know_ that we are using the Infiniband technology for communication?  Is it some sort of speed test to confirm? - IDEA: find a speed test and run it on 2 OZ3 slow nodes and then on BERNIE
-* I've been focusing my efforts on IMPI documentation.  Maybe Mellanox has documentation on hardware configuration?
-* Maybe try to run my test code on 1 node with debug=5 to observe if it is able to choose SHM vs OFI.
-
-
 ## Benchmark Simulation Summary
 
 The new HPC is called "BERNIE" and uses a new headnode, a new file server, and a new Mellanox Infiniband switch.  For now, ITSD have taken 2 compute nodes from the old cluster (node001, node003) and moved them to the new cluster (cnode001, cnode003).  These are older nodes, each with 8 CPUs with Intel _Ivy Bridge_ architecture.  In this way, I can run a benchmark Sierra explicit simulation (i.e. adagio) to compare performance on the same hardware using different verions of Sierra and different compiler environments.
@@ -79,22 +45,46 @@ _Notes about testing a GCC/OpenMPI environment, compiling Sierra, and running on
 ### [Sierra_Intel_oneAPI](Sierra_Intel_oneAPI.md) 
 _Notes about testing an Intel oneAPI environment, compiling Sierra, and running on Slurm._
 
+### [ORNL Research Cloud](ORC.md) 
+_Notes about testing Sierra on a virtual machine using AMD processosrs on the ORNL Research Cloud._
 
 
 
 
+## Hardware
+
+The current HPC setup on BERNIE for testing includes the following components:
+* headnode
+  - 2 x Intel Xeon Scalable Gold 6426Y, 2.5GHz (16-Core) "Sapphire Rapids"
+  - 16 x 16GB PC5-38400 4800MHz DDR5 ECC RDIMM
+  - NVIDIA 100-Gigabit HDR100 InfiniBand Adapter (ConnectX-6)
+* network storage
+  - 180TB RAID z2 vdev
+  - NVIDIA 100-Gigabit HDR100 InfiniBand Adapter (ConnectX-6)
+* switch
+  - NVIDIA Mellanox QM8700 - 40-Port Managed HDR InfiniBand 200Gb/s Switch
+* compute nodes (x2)
+  - NVIDIA Mellanox Technologies MT27500 Family (ConnectX-3)
+  - Intel(R) Xeon(R) CPU E5-2637 v2 @ 3.50GHz (8-Core) "Ivy Bridge"
 
 
+## Drivers
+
+I'm still trying to understand the correct software drivers that should be used for this hardware configuration _specifically as it relates to the Infiniband communication_.  Some notes are found in the  [Intel oneAPI Hardware Driver Troubleshooting](Sierra_Intel_oneAPI.md#hardware-driver-troubleshooting) portion of this project.  Other internet resources are:
+* https://developer.nvidia.com/networking/infiniband-software
+* https://lists.openfabrics.org/pipermail/libfabric-users/2024-May/001037.html
+* OFED
+  - https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/
+  - https://stackoverflow.com/questions/58622347/what-is-the-difference-between-ofed-mlnx-ofed-and-the-inbox-driver
+  - https://www.openfabrics.org/ofed-for-linux/
+  - https://serverfault.com/questions/1048740/infiniband-drivers-ofed-or-distro-included
+* https://easybuild.io/eum22/011_eum22_mpi_easybuild.pdf
+
+A summary of my understanding is:
+* Firmware and drivers is important to performance.
+* Current Mellanox drivers are DOCA.
+* Previous Mellanox drivers are OFED.
+* ConnectX-3 and older cards cannot use OFED or DOCA.  You insead have to use the stock RedHat supplied drivers.
 
 
-
-
-
-
-
-
-
-
-
-
-
+## Performance Testing
