@@ -91,6 +91,9 @@ A summary of my understanding is:
 
 - https://www.intel.com/content/www/us/en/developer/articles/technical/intel-mpi-benchmarks.html
   * https://orfeo-doc.areasciencepark.it/examples/MPI-communication/
+  * `mpirun -np 2 --map-by core IMB-MPI1 pingpong`
+  * `mpirun -np 2 --map-by socket IMB-MPI1 pingpong`
+  * `mpirun -np 2 -genv I_MPI_PIN_PROCESSOR_LIST=0,249 IMB-MPI1 pingpong`
   * https://openbenchmarking.org/test/pts/intel-mpi&eval=87eaf65bb9165c1f55818e7cb6d2dac014567573#metrics
   * https://www.ibm.com/support/pages/how-do-i-check-open-mpi-112-infiniband-support-using-intel-mpi-benchmark
 - https://mvapich.cse.ohio-state.edu/benchmarks/
