@@ -95,10 +95,17 @@ A summary of my understanding is:
   * `mpirun -np 2 --map-by socket IMB-MPI1 pingpong`
   * `mpirun -np 2 -genv I_MPI_PIN_PROCESSOR_LIST=0,249 IMB-MPI1 pingpong`
   * https://openbenchmarking.org/test/pts/intel-mpi&eval=87eaf65bb9165c1f55818e7cb6d2dac014567573#metrics
+  * https://openbenchmarking.org/performance/test/pts/openradioss/0f18edb88d5996034c2dd4dd27e2445573940be9
   * https://www.ibm.com/support/pages/how-do-i-check-open-mpi-112-infiniband-support-using-intel-mpi-benchmark
 - https://mvapich.cse.ohio-state.edu/benchmarks/
   * This is available via Spack!
   * https://packages.spack.io/package.html?name=osu-micro-benchmarks
+- HPC Challenge
+  * also available via Spack
+  * https://hpcchallenge.org/hpcc/hpcc_results.cgi@orderby=PRO&sortorder=DESC&display=combo.html
+  * https://hpcchallenge.org/hpcc/hpcc_record.cgi@id=223.html
+  * https://hpcchallenge.org/hpcc/hpcc_record.cgi@id=245.html
+  * https://hpcchallenge.org/hpcc/hpcc_record.cgi@id=328.html
 - https://hpctoolkit.org/
 - https://www.top500.org/project/linpack/
 
