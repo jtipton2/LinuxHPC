@@ -97,7 +97,7 @@ spack:
 - ompi 4.1 worked without issues
 - Tests
     * `mpirun -np 1 hostname`
-    * `mpicc -o mpi_hello_world ./mpi_hello_world`
+    * `mpicc -o mpi_hello_world mpi_hello_world.c`
     * `mpirun -np 2 ./mpi_hello_world`
     * `sbatch test.slurm`
     * `sbatch test_mpi.slurm`
