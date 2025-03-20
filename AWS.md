@@ -174,5 +174,66 @@ SharedStorage:
 
 ### Part III - Install Spack & Set Environment
 
-### Part IV - Install Sierra
+```
+sudo yum install autoconf automake bison bzip2 diffutils flex libtool m4 python3-devel.x86_64 libX11-devel.x86_64 libcurl-devel.x86_64
+which python3
+which python
+sudo ln -sf /usr/bin/python3 /usr/bin/python
 
+
+curl -sL -O https://raw.githubusercontent.com/spack/spack-configs/main/AWS/parallelcluster/postinstall.sh
+sudo bash postinstall.sh
+tail -f /var/log/spack-postinstall.log
+
+spack install -j 32 gcc@10.5.0
+spack compiler add "$(spack location -i gcc@10.5.0)"
+# this made a file entry in /home/ec2-user/.spack/linux/compilers.yaml
+# had to add a prepend path to the compiler following what was done in /shared/spack/etc/spack/compilers.yaml
+spack compilers
+ 
+spack install -j 64 intel-oneapi-compilers@2024.1.0%gcc@10.5.0
+
+# had to remove the other version of oneapi built with gcc@12
+# also needed to then remove this from the compilers
+spack find --format "{name}-{version}-{hash}"
+spack uninstall /46k6kokhbateyvghfxsm5uykwlu4odcm
+
+
+spack install -j 64 libfabric fabrics=efa,tcp,udp,sockets,verbs,shm,mrail,rxd,rxm %oneapi
+
+spack load intel-oneapi-compilers
+spack compiler find
+"""
+  - compiler:
+      spec: oneapi@=2024.1.0
+      paths:
+        cc: /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-12.4.0/intel-oneapi-compilers-2024.1.0-46k6kokhbateyvghfxsm5uykwlu4odcm/compiler/latest/bin/icx
+        cxx: /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-12.4.0/intel-oneapi-compilers-2024.1.0-46k6kokhbateyvghfxsm5uykwlu4odcm/compiler/latest/bin/icpx
+        f77: /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-12.4.0/intel-oneapi-compilers-2024.1.0-46k6kokhbateyvghfxsm5uykwlu4odcm/compiler/latest/bin/ifx
+        fc: /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-12.4.0/intel-oneapi-compilers-2024.1.0-46k6kokhbateyvghfxsm5uykwlu4odcm/compiler/latest/bin/ifx
+      flags: {}
+      operating_system: amzn2
+      target: x86_64
+      modules: []
+      environment:
+        prepend_path:
+          PATH: /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-7.3.1/binutils-2.37-qvccg7zpskturysmr4bzbsfrx34kvazo/bin
+      extra_rpaths:
+        - /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-7.3.1/gcc-12.4.0-pttzchh7o54nhmycj4wgzw5mic6rk2nb/lib64
+"""
+
+spack install -j 64 intel-oneapi-mpi+external-libfabric%oneapi
+
+spack install -j 64 intel-oneapi-mkl@2024.2.0+cluster^intel-oneapi-mpi%oneapi
+
+```
+
+
+### Part IV - Install Sierra
+```
+module load /home/ec2-user/sierraenv.mod
+SIERRA_ROOT=/shared/sierra_5.22
+cd ${SIERRA_ROOT}
+
+nohup /shared/source/sierra_setup.py --procs=64 --keep-build-dir &
+```
