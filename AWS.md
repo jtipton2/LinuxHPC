@@ -14,6 +14,9 @@ Amazon created a physically different AWS option for the US Government that foll
     * https://www.hpcworkshops.com/03-parallel-cluster-cli/11-1stjob.html
     * https://www.hpcworkshops.com/05-fsx-for-lustre/09-performance-test.html
     * https://www.hpcworkshops.com/07-efa/04-complie-run-osu.html
+  * https://github.com/aws-samples/hpc-applications/blob/main/apps/LS-Dyna/LS-Dyna.sbatch
+  * https://github.com/aws-samples/hpc-applications/blob/main/apps/Abaqus/Abaqus.sbatch
+  * https://aws.amazon.com/blogs/opensource/best-practices-running-ansys-fluent-aws-parallelcluster/
 * Best Tutorial Materials
   * https://catalog.workshops.aws/nwp-on-aws/en-US
   * https://aws.amazon.com/blogs/hpc/install-optimized-software-with-spack-configs-for-aws-parallelcluster/
