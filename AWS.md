@@ -182,9 +182,9 @@ sudo ln -sf /usr/bin/python3 /usr/bin/python
 ```
 
 * Install Spack
- * https://aws.amazon.com/blogs/hpc/install-optimized-software-with-spack-configs-for-aws-parallelcluster/
- * > Third, you will need to decide on an instance type for your cluster’s head node. The Spack installer script uses the head node CPU architecture to determine what compilers and optimizations to install. Thus, we recommend matching the CPU generation and architecture of your head node to the instances you will run your HPC jobs on. For example, if you’re building a cluster with hpc6id.32xlarge compute nodes, a c6i.xlarge would be an appropriate head node instance type. Be aware that Spack does not support t2, t3, or t4 family instances, which some people use for lightweight head nodes. Choose from c, m, or r instance types instead to avoid this limitation.
- * > Finally, Spack needs a shared directory where you can install it. This helps ensure Spack and the software it can manage are accessible from every node in your cluster. If your cluster will run in a single Availability Zone, we recommend you use Amazon FSx for Lustre for shared storage. 
+  * https://aws.amazon.com/blogs/hpc/install-optimized-software-with-spack-configs-for-aws-parallelcluster/
+  * > Third, you will need to decide on an instance type for your cluster’s head node. The Spack installer script uses the head node CPU architecture to determine what compilers and optimizations to install. Thus, we recommend matching the CPU generation and architecture of your head node to the instances you will run your HPC jobs on. For example, if you’re building a cluster with hpc6id.32xlarge compute nodes, a c6i.xlarge would be an appropriate head node instance type. Be aware that Spack does not support t2, t3, or t4 family instances, which some people use for lightweight head nodes. Choose from c, m, or r instance types instead to avoid this limitation.
+  * > Finally, Spack needs a shared directory where you can install it. This helps ensure Spack and the software it can manage are accessible from every node in your cluster. If your cluster will run in a single Availability Zone, we recommend you use Amazon FSx for Lustre for shared storage. 
 ```
 curl -sL -O https://raw.githubusercontent.com/spack/spack-configs/main/AWS/parallelcluster/postinstall.sh
 sudo bash postinstall.sh
