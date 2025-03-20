@@ -230,7 +230,151 @@ spack install -j 64 intel-oneapi-mkl@2024.2.0+cluster^intel-oneapi-mpi%oneapi
 * The Sierra install spins up its own spack instance to install third party libraries (TPLs).  It will crash if Spack is already running on the cluster.  Nicely, the AWS Spack script automatically integrates with the module environment.  I can thus copy the module scripts, make my own Sierra module, and disable spack from loading on the cluster.
 * Use `module avail` to see listings.  Then use `module show XXXX` to get the settings:
 
+```
+[ec2-user@ip-10-0-0-39 ~]$ module show intel-oneapi-compilers/2024.1.0-gcc-10.5.0-ic4d364
+-------------------------------------------------------------------
+/shared/spack/share/spack/modules/linux-amzn2-x86_64_v3/intel-oneapi-compilers/2024.1.0-gcc-10.5.0-ic4d364:
 
+module-whatis    Intel oneAPI Compilers. Includes: icx, icpx, ifx, and ifort. Releases before 2024.0 include icc/icpc LICENSE INFORMATION: By downloading and using this software, you agree to the terms and conditions of the software license agreements at https://intel.ly/393CijO.
+conflict         intel-oneapi-compilers
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/.
+prepend-path     ACL_BOARD_VENDOR_PATH /opt/Intel/OpenCLFPGA/oneAPI/Boards
+setenv           CMPLR_ROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1
+prepend-path     CPATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga/include
+prepend-path     DIAGUTIL_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/etc/compiler/sys_check/sys_check.sh
+setenv           FPGA_VARS_ARGS
+setenv           FPGA_VARS_DIR /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga
+setenv           INTELFPGAOCLSDKROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga
+prepend-path     LD_LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga/host/linux64/lib:/shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/compiler/lib:/shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib
+prepend-path     LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib
+prepend-path     NLSPATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib/compiler/locale/%l_%t/%N
+prepend-path     OCL_ICD_FILENAMES libintelocl_emu.so:libalteracl.so:/shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib/libintelocl.so
+prepend-path     PKG_CONFIG_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib/pkgconfig
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1
+prepend-path     MANPATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/share/man
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga/bin
+setenv           CC /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/icx
+setenv           CXX /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/icpx
+setenv           F77 /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/ifx
+setenv           FC /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/ifx
+setenv           INTEL_ONEAPI_COMPILERS_ROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl
+append-path      MANPATH
+-------------------------------------------------------------------
+
+
+[ec2-user@ip-10-0-0-39 ~]$ module show intel-oneapi-mpi/2021.14.0-oneapi-2024.1.0-qeh6djk
+-------------------------------------------------------------------
+/shared/spack/share/spack/modules/linux-amzn2-skylake_avx512/intel-oneapi-mpi/2021.14.0-oneapi-2024.1.0-qeh6djk:
+
+module-whatis    Intel MPI Library is a multifabric message-passing library that implements the open-source MPICH specification. Use the library to create, maintain, and test advanced, complex applications that perform better on high-performance computing (HPC) clusters based on Intel processors.
+module           load intel-oneapi-runtime/2024.1.0-oneapi-2024.1.0-qpf3qxi
+module           load libfabric/1.22.0-oneapi-2024.1.0-wvnsyjs
+conflict         intel-oneapi-mpi
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/.
+prepend-path     LD_LIBRARY_PATH /opt/amazon/efa/lib
+prepend-path     LD_LIBRARY_PATH /opt/amazon/efa/lib64
+prepend-path     CLASSPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/share/java/mpi.jar
+prepend-path     CPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/include
+setenv           I_MPI_ROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14
+prepend-path     LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/lib
+prepend-path     LD_LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/lib
+prepend-path     MANPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/share/man:/shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/share/man:/usr/share/man::/opt/slurm/share/man:
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/bin
+prepend-path     PKG_CONFIG_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/lib/pkgconfig
+setenv           INTEL_ONEAPI_MPI_ROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r
+append-path      MANPATH
+-------------------------------------------------------------------
+
+
+[ec2-user@ip-10-0-0-39 ~]$ module show intel-oneapi-mkl/2024.2.0-oneapi-2024.1.0-2kfcrkx
+-------------------------------------------------------------------
+/shared/spack/share/spack/modules/linux-amzn2-skylake_avx512/intel-oneapi-mkl/2024.2.0-oneapi-2024.1.0-2kfcrkx:
+
+module-whatis    Intel oneAPI Math Kernel Library (Intel oneMKL; formerly Intel Math Kernel Library or Intel MKL), is a library of optimized math routines for science, engineering, and financial applications. Core math functions include BLAS, LAPACK, ScaLAPACK, sparse solvers, fast Fourier transforms, and vector math.
+module           load intel-oneapi-mpi/2021.14.0-oneapi-2024.1.0-qeh6djk
+module           load intel-oneapi-runtime/2024.1.0-oneapi-2024.1.0-qpf3qxi
+module           load intel-oneapi-tbb/2022.0.0-gcc-12.4.0-f5ibkfg
+conflict         intel-oneapi-mkl
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/.
+setenv           MKLROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/lib/cmake
+prepend-path     CPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/include
+prepend-path     LD_LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/lib
+prepend-path     LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/lib/
+prepend-path     NLSPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/share/locale/%l_%t/%N
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/bin/
+prepend-path     PKG_CONFIG_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/lib/pkgconfig
+setenv           INTEL_ONEAPI_MKL_ROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt
+-------------------------------------------------------------------
+
+
+[ec2-user@ip-10-0-0-39 ~]$ module show libfabric/1.22.0-oneapi-2024.1.0-wvnsyjs
+-------------------------------------------------------------------
+/shared/spack/share/spack/modules/linux-amzn2-skylake_avx512/libfabric/1.22.0-oneapi-2024.1.0-wvnsyjs:
+
+module-whatis    The Open Fabrics Interfaces (OFI) is a framework focused on exporting fabric communication services to applications.
+conflict         libfabric
+prepend-path     PATH /opt/amazon/efa/bin
+prepend-path     MANPATH /opt/amazon/efa/share/man
+prepend-path     PKG_CONFIG_PATH /opt/amazon/efa/lib64/pkgconfig
+prepend-path     CMAKE_PREFIX_PATH /opt/amazon/efa/.
+prepend-path     LD_LIBRARY_PATH /opt/amazon/efa/lib
+prepend-path     LD_LIBRARY_PATH /opt/amazon/efa/lib64
+setenv           LIBFABRIC_ROOT /opt/amazon/efa/
+append-path      MANPATH
+-------------------------------------------------------------------
+
+
+[ec2-user@ip-10-0-0-39 ~]$ module show intel-oneapi-runtime/2024.1.0-oneapi-2024.1.0-qpf3qxi
+-------------------------------------------------------------------
+/shared/spack/share/spack/modules/linux-amzn2-skylake_avx512/intel-oneapi-runtime/2024.1.0-oneapi-2024.1.0-qpf3qxi:
+
+module-whatis    Package for OneAPI compiler runtime libraries redistributables. LICENSE INFORMATION: By downloading and using this software, you agree to the terms and conditions of the software license agreements at https://intel.ly/393CijO.
+conflict         intel-oneapi-runtime
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-runtime-2024.1.0-qpf3qxifb6wkcie2uxbcftwtzen3t3qb/.
+setenv           INTEL_ONEAPI_RUNTIME_ROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-runtime-2024.1.0-qpf3qxifb6wkcie2uxbcftwtzen3t3qb
+-------------------------------------------------------------------
+
+
+[ec2-user@ip-10-0-0-39 ~]$ module show intel-oneapi-tbb/2022.0.0-gcc-12.4.0-f5ibkfg
+-------------------------------------------------------------------
+/shared/spack/share/spack/modules/linux-amzn2-x86_64_v4/intel-oneapi-tbb/2022.0.0-gcc-12.4.0-f5ibkfg:
+
+module-whatis    Intel oneAPI Threading Building Blocks (oneTBB) is a flexible performance library that simplifies the work of adding parallelism to complex applications across accelerated architectures, even if you are not a threading expert.
+conflict         intel-oneapi-tbb
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/.
+setenv           TBBROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/..
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/..
+prepend-path     CPATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/../include
+prepend-path     LD_LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/../lib/intel64/gcc4.8
+prepend-path     LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/../lib/intel64/gcc4.8
+prepend-path     PKG_CONFIG_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/../lib/pkgconfig
+setenv           INTEL_ONEAPI_TBB_ROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc
+-------------------------------------------------------------------
+
+
+[ec2-user@ip-10-0-0-39 ~]$ module show gcc/10.5.0-gcc-12.4.0-ypgh42q
+-------------------------------------------------------------------
+/shared/spack/share/spack/modules/linux-amzn2-skylake_avx512/gcc/10.5.0-gcc-12.4.0-ypgh42q:
+
+module-whatis    The GNU Compiler Collection includes front ends for C, C++, Objective-C, Fortran, Ada, and Go, as well as libraries for these languages.
+module           load gmp/6.3.0-gcc-12.4.0-nvqmuj3
+module           load mpc/1.3.1-gcc-12.4.0-6qm7spa
+module           load mpfr/4.2.1-gcc-12.4.0-infmbmz
+module           load zlib-ng/2.2.1-gcc-12.4.0-ywvdco5
+module           load zstd/1.5.6-gcc-12.4.0-r4wkqmj
+conflict         gcc
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/bin
+prepend-path     MANPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/share/man
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/.
+setenv           CC /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/bin/gcc
+setenv           FC /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/bin/gfortran
+setenv           F77 /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/bin/gfortran
+setenv           GCC_ROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg
+append-path      MANPATH
+-------------------------------------------------------------------
+```
 
 
 
