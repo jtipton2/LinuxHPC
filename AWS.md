@@ -482,3 +482,59 @@ SIERRA_ROOT=/shared/sierra_5.22
 cd ${SIERRA_ROOT}
 nohup /shared/source/sierra_setup.py --procs=32 --keep-build-dir &
 ```
+
+## Usage Proceedure
+
+### Part I - Testing Slurm
+* compile MPI "hello world" script
+```
+mpiicc -o mpihello /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/opt/mpi/test/test.c
+```
+
+* run via slurm
+```
+#!/bin/bash
+#SBATCH --exclusive
+#SBATCH -t 24:00:00
+#SBATCH --ntasks=100
+#SBATCH --cpus-per-task=1
+
+#
+# load environment settings
+#
+module load /shared/sierraenv.mod
+source /shared/sierra_5.22/install/sierra_init.sh
+
+export I_MPI_OFI_LIBRARY_INTERNAL=0
+export I_MPI_DEBUG=5
+export I_MPI_FABRICS=shm:ofi
+export I_MPI_OFI_PROVIDER=efa
+export I_MPI_MULTIRAIL=1
+
+#
+# go to directory
+#
+cd $SLURM_SUBMIT_DIR
+echo "SLURM_SUBMIT_DIR is $SLURM_SUBMIT_DIR"
+
+#
+# Helpful diagnostics for performance troubleshooting
+#
+echo "======== HOSTNAMECTL ========="
+hostnamectl
+
+echo "======== HOST LSCPU ========="
+lscpu
+
+echo "======== SLURM JOB DIAGNOSTICS ========"
+echo "SLURM_JOBID is $SLURM_JOBID"
+echo "SLURM_NODELIST is $SLURM_NODELIST"
+echo "SLURM_NNODES is $SLURM_NNODES"
+echo "SLURM_NTASKS is $SLURM_NTASKS"
+echo "SLURM_CPUS_PER_TASK is $SLURM_CPUS_PER_TASK"
+
+#
+# run the compiled code
+#
+mpirun ./mpihello
+```
