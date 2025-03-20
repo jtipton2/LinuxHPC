@@ -376,12 +376,106 @@ append-path      MANPATH
 -------------------------------------------------------------------
 ```
 
+* create a custom module `sierraenv.mod` to load these environments
+  * I added the `I_MPI_XX` settings, otherwise there's a bug in IMPI that tries to find `icc` which is not installed
+  * I added the GCC path to `binutils` which is what is listed in the `compilers.yaml` file
+```
+#%Module
 
+module-whatis   "Sets up environment to be able to compile Sierra 5.22"
 
+# from module show intel-oneapi-compilers/2024.1.0-gcc-10.5.0-ic4d364
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/.
+prepend-path     ACL_BOARD_VENDOR_PATH /opt/Intel/OpenCLFPGA/oneAPI/Boards
+setenv           CMPLR_ROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1
+prepend-path     CPATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga/include
+prepend-path     DIAGUTIL_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/etc/compiler/sys_check/sys_check.sh
+#setenv           FPGA_VARS_ARGS
+setenv           FPGA_VARS_DIR /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga
+setenv           INTELFPGAOCLSDKROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga
+prepend-path     LD_LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga/host/linux64/lib:/shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/compiler/lib:/shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib
+prepend-path     LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib
+prepend-path     NLSPATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib/compiler/locale/%l_%t/%N
+prepend-path     OCL_ICD_FILENAMES libintelocl_emu.so:libalteracl.so:/shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib/libintelocl.so
+prepend-path     PKG_CONFIG_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/lib/pkgconfig
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1
+prepend-path     MANPATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/share/man
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/opt/oclfpga/bin
+setenv           CC /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/icx
+setenv           CXX /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/icpx
+setenv           F77 /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/ifx
+setenv           FC /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/ifx
+setenv           INTEL_ONEAPI_COMPILERS_ROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl
+#append-path      MANPATH
+
+# from module show intel-oneapi-runtime/2024.1.0-oneapi-2024.1.0-qpf3qxi
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-runtime-2024.1.0-qpf3qxifb6wkcie2uxbcftwtzen3t3qb/.
+setenv           INTEL_ONEAPI_RUNTIME_ROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-runtime-2024.1.0-qpf3qxifb6wkcie2uxbcftwtzen3t3qb
+
+# from module show libfabric/1.22.0-oneapi-2024.1.0-wvnsyjs
+prepend-path     PATH /opt/amazon/efa/bin
+prepend-path     MANPATH /opt/amazon/efa/share/man
+prepend-path     PKG_CONFIG_PATH /opt/amazon/efa/lib64/pkgconfig
+prepend-path     CMAKE_PREFIX_PATH /opt/amazon/efa/.
+prepend-path     LD_LIBRARY_PATH /opt/amazon/efa/lib
+prepend-path     LD_LIBRARY_PATH /opt/amazon/efa/lib64
+setenv           LIBFABRIC_ROOT /opt/amazon/efa/
+#append-path      MANPATH
+
+# from module show intel-oneapi-mpi/2021.14.0-oneapi-2024.1.0-qeh6djk
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/.
+prepend-path     LD_LIBRARY_PATH /opt/amazon/efa/lib
+prepend-path     LD_LIBRARY_PATH /opt/amazon/efa/lib64
+prepend-path     CLASSPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/share/java/mpi.jar
+prepend-path     CPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/include
+setenv           I_MPI_ROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14
+prepend-path     LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/lib
+prepend-path     LD_LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/lib
+prepend-path     MANPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/share/man:/shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/share/man:/usr/share/man::/opt/slurm/share/man:
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/bin
+prepend-path     PKG_CONFIG_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r/mpi/2021.14/lib/pkgconfig
+setenv           INTEL_ONEAPI_MPI_ROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mpi-2021.14.0-qeh6djkva3u5nk7diymkg7bakhuzhe2r
+#append-path      MANPATH
+setenv           I_MPI_CC /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/icx
+setenv           I_MPI_CXX /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/icpx
+setenv           I_MPI_F77 /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/ifx
+setenv           I_MPI_F90 /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-10.5.0/intel-oneapi-compilers-2024.1.0-ic4d364p36e4wbteuxpiq4pbzeazv4nl/compiler/2024.1/bin/ifx
+
+# from module show intel-oneapi-tbb/2022.0.0-gcc-12.4.0-f5ibkfg
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/.
+setenv           TBBROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/..
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/..
+prepend-path     CPATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/../include
+prepend-path     LD_LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/../lib/intel64/gcc4.8
+prepend-path     LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/../lib/intel64/gcc4.8
+prepend-path     PKG_CONFIG_PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc/tbb/2022.0/env/../lib/pkgconfig
+setenv           INTEL_ONEAPI_TBB_ROOT /shared/spack/opt/spack/linux-amzn2-x86_64_v4/gcc-12.4.0/intel-oneapi-tbb-2022.0.0-f5ibkfg75ntm5bdcetf233ibnkr5cggc
+
+# from module show intel-oneapi-mkl/2024.2.0-oneapi-2024.1.0-2kfcrkx
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/.
+setenv           MKLROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2
+prepend-path     CMAKE_PREFIX_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/lib/cmake
+prepend-path     CPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/include
+prepend-path     LD_LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/lib
+prepend-path     LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/lib/
+prepend-path     NLSPATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/share/locale/%l_%t/%N
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/bin/
+prepend-path     PKG_CONFIG_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt/mkl/2024.2/lib/pkgconfig
+setenv           INTEL_ONEAPI_MKL_ROOT /shared/spack/opt/spack/linux-amzn2-skylake_avx512/oneapi-2024.1.0/intel-oneapi-mkl-2024.2.0-2kfcrkxjdvlgascv7zu4b5vj3ry4yqbt
+
+# finally set the location to GCC@10.5.0
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/bin
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/lib64
+prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-7.3.1/binutils-2.37-qvccg7zpskturysmr4bzbsfrx34kvazo/bin
+```
+
+* Now you can remove the `/etc/profile.d/spack.sh` entry to keep it from autoloading.  It was just running `source /shared/spack/share/spack/setup-env.sh` which can be done manually.
+* SSH into a new Putty terminal, and run the Sierra installation
+* `nohup` is important to run the installer in the background so it doesn't terminate when the shell is closed
 ```
 module load /home/ec2-user/sierraenv.mod
 SIERRA_ROOT=/shared/sierra_5.22
 cd ${SIERRA_ROOT}
-
-nohup /shared/source/sierra_setup.py --procs=64 --keep-build-dir &
+nohup /shared/source/sierra_setup.py --procs=32 --keep-build-dir &
 ```
