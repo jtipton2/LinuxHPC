@@ -466,7 +466,7 @@ setenv           INTEL_ONEAPI_MKL_ROOT /shared/spack/opt/spack/linux-amzn2-skyla
 
 # finally set the location to GCC@10.5.0
 prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/bin
-prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/lib64
+prepend-path     LD_LIBRARY_PATH /shared/spack/opt/spack/linux-amzn2-skylake_avx512/gcc-12.4.0/gcc-10.5.0-ypgh42qqo2n4aiweu2de6bg6muf7klrg/lib64
 prepend-path     PATH /shared/spack/opt/spack/linux-amzn2-x86_64_v3/gcc-7.3.1/binutils-2.37-qvccg7zpskturysmr4bzbsfrx34kvazo/bin
 ```
 
