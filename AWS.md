@@ -17,6 +17,10 @@ Amazon created a physically different AWS option for the US Government that foll
 * Best Tutorial Materials
   * https://catalog.workshops.aws/nwp-on-aws/en-US
   * https://aws.amazon.com/blogs/hpc/install-optimized-software-with-spack-configs-for-aws-parallelcluster/
+* New(er) Material to Explore
+ *  https://aws.amazon.com/blogs/hpc/you-told-us-we-needed-to-re-think-hpc-in-the-cloud-so-we-did/
+ *  https://aws.amazon.com/hpc/resources/
+
 
 ## Access Proceedure
 
