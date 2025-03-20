@@ -3,9 +3,20 @@
 Amazon created a physically different AWS option for the US Government that follows regulations (including ITAR, EAR) and allows access only by US Citizens (https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-differences.html).
 
 ## AWS ParallelCluster 
-* Open source tool created by AWS to create HPC environments
-* https://aws.amazon.com/hpc/parallelcluster/
-* https://github.com/aws/aws-parallelcluster
+* Overview
+  * Open source tool created by AWS to create HPC environments
+  * https://aws.amazon.com/hpc/parallelcluster/
+  * https://github.com/aws/aws-parallelcluster
+* Background Materials
+  * https://github.com/aws-samples/aws-hpc-tutorials
+  * Links to: https://www.hpcworkshops.com/
+  * Material is already about 2 years old
+    * https://www.hpcworkshops.com/03-parallel-cluster-cli/11-1stjob.html
+    * https://www.hpcworkshops.com/05-fsx-for-lustre/09-performance-test.html
+    * https://www.hpcworkshops.com/07-efa/04-complie-run-osu.html
+* Best Tutorial Materials
+  * https://catalog.workshops.aws/nwp-on-aws/en-US
+  * https://aws.amazon.com/blogs/hpc/install-optimized-software-with-spack-configs-for-aws-parallelcluster/
 
 ## Access Proceedure
 
@@ -79,7 +90,8 @@ You can edit your configuration file or simply run 'pcluster create-cluster --cl
 ```
 
 ### Part II - Launch HPC Instance
-* First, I tweak the `config-hpc.yaml` file based on tutorials:
+* First, I tweak the `config-hpc.yaml` file based on the template from a tutorial
+* https://catalog.workshops.aws/nwp-on-aws/en-US/1-create-cluster/a-create-cluster
 ```
 Region: us-gov-west-1
 Image:
