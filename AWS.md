@@ -172,7 +172,7 @@ SharedStorage:
 * Then I can follow these instructions to access the EC2 HPC instance via Putty:  https://ornl.servicenowservices.com/kb_view.do?sysparm_article=KB0011577
 
 
-### Part III - Install Spack & Set Environment
+### Part III - Install Spack & Needed Packages
 * Get needed packages for Sierra install
 ```
 sudo yum install autoconf automake bison bzip2 diffutils flex libtool m4 python3-devel.x86_64 libX11-devel.x86_64 libcurl-devel.x86_64
@@ -218,6 +218,7 @@ spack compiler find
 ```
 
 * install `libfabric`, `intel-oneapi-mpi`, and `intel-oneapi-mkl`
+* https://catalog.workshops.aws/nwp-on-aws/en-US/1-create-cluster/e-install-intel
 ```
 spack install -j 64 libfabric fabrics=efa,tcp,udp,sockets,verbs,shm,mrail,rxd,rxm %oneapi
 spack install -j 64 intel-oneapi-mpi+external-libfabric%oneapi
@@ -226,6 +227,13 @@ spack install -j 64 intel-oneapi-mkl@2024.2.0+cluster^intel-oneapi-mpi%oneapi
 
 
 ### Part IV - Install Sierra
+* The Sierra install spins up its own spack instance to install third party libraries (TPLs).  It will crash if Spack is already running on the cluster.  Nicely, the AWS Spack script automatically integrates with the module environment.  I can thus copy the module scripts, make my own Sierra module, and disable spack from loading on the cluster.
+* Use `module avail` to see listings.  Then use `module show XXXX` to get the settings:
+
+
+
+
+
 ```
 module load /home/ec2-user/sierraenv.mod
 SIERRA_ROOT=/shared/sierra_5.22
