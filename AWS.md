@@ -173,18 +173,25 @@ SharedStorage:
 
 
 ### Part III - Install Spack & Set Environment
-
+* Get needed packages for Sierra install
 ```
 sudo yum install autoconf automake bison bzip2 diffutils flex libtool m4 python3-devel.x86_64 libX11-devel.x86_64 libcurl-devel.x86_64
 which python3
 which python
 sudo ln -sf /usr/bin/python3 /usr/bin/python
+```
 
-
+* Install Spack
+ * https://aws.amazon.com/blogs/hpc/install-optimized-software-with-spack-configs-for-aws-parallelcluster/
+ * > Third, you will need to decide on an instance type for your cluster’s head node. The Spack installer script uses the head node CPU architecture to determine what compilers and optimizations to install. Thus, we recommend matching the CPU generation and architecture of your head node to the instances you will run your HPC jobs on. For example, if you’re building a cluster with hpc6id.32xlarge compute nodes, a c6i.xlarge would be an appropriate head node instance type. Be aware that Spack does not support t2, t3, or t4 family instances, which some people use for lightweight head nodes. Choose from c, m, or r instance types instead to avoid this limitation.
+ * > Finally, Spack needs a shared directory where you can install it. This helps ensure Spack and the software it can manage are accessible from every node in your cluster. If your cluster will run in a single Availability Zone, we recommend you use Amazon FSx for Lustre for shared storage. 
+```
 curl -sL -O https://raw.githubusercontent.com/spack/spack-configs/main/AWS/parallelcluster/postinstall.sh
 sudo bash postinstall.sh
 tail -f /var/log/spack-postinstall.log
+```
 
+```
 spack install -j 32 gcc@10.5.0
 spack compiler add "$(spack location -i gcc@10.5.0)"
 # this made a file entry in /home/ec2-user/.spack/linux/compilers.yaml
