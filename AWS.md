@@ -23,11 +23,14 @@ Amazon created a physically different AWS option for the US Government that foll
 * New(er) Material to Explore
   *  https://aws.amazon.com/blogs/hpc/you-told-us-we-needed-to-re-think-hpc-in-the-cloud-so-we-did/
   *  https://aws.amazon.com/hpc/resources/
+* Additional Materials Recommended by Support Staff
+  * https://catalog.workshops.aws/sc23-tutorial/en-US
+  * https://github.com/orgs/aws-samples/repositories?language=&q=parallelcluster&sort=&type=all
 
 
 ## Access Proceedure
 
-### Part I - Install PCLuster
+### Part I - Install PCluster
 * cloudtamer.ornl.gov
 * Cloud Management --> Cloud Access Roles --> My Cloud Access Roles --> STS-target-Engineering-Admin --> Cloud Access --> Select an Account --> Web Access
 * From there I can launch a console and follow the pcluster CLI instructions to create a HPC instance
@@ -538,3 +541,80 @@ echo "SLURM_CPUS_PER_TASK is $SLURM_CPUS_PER_TASK"
 #
 mpirun ./mpihello
 ```
+
+### Part II - Modifying the Compute Nodes
+
+__Best Instances to Choose__
+* https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-instance-regions.html
+* Shows several HPC instances.  Discussion with support recommended `hpc6id`.  Other interesting options:
+  * https://aws.amazon.com/ec2/instance-types/hpc6a/
+  * https://aws.amazon.com/ec2/instance-types/hpc6i/
+  * https://aws.amazon.com/ec2/instance-types/hpc7a/
+
+__HPC Update Procedure__
+* restart CloudShell and activate environment as before
+* Can use the CloudFormation app to get details on the process
+* Had to add `SlurmSettings: QueueUpdateStrategy: TERMINATE` to YAML config
+* Consider setting Lustre to not delete.  Can use Lustre between multiple clusters
+* https://docs.aws.amazon.com/parallelcluster/latest/ug/shared-storage-config-fsxlustre-v3.html
+
+
+```
+$ source ~/apc-ve/bin/activate
+$ export AWS_ACCESS_KEY_ID=XXXX
+$ export AWS_SECRET_ACCESS_KEY=XXXX
+$ export AWS_SESSION_TOKEN=XXXX
+
+$ pcluster update-compute-fleet --cluster-name hpc --status STOP_REQUESTED
+$ pcluster update-cluster --cluster-name OZ4AWS --cluster-configuration config-hpc.yaml
+$ pcluster update-compute-fleet --cluster-name hpc --status START_REQUESTED
+$ pcluster list-clusters
+```
+
+```
+[cloudshell-user@ip-10-0-92-86 ~]$ cat config-hpc.yaml
+Region: us-gov-west-1
+Image:
+  Os: alinux2
+HeadNode:
+  InstanceType: c5n.18xlarge
+  Networking:
+    SubnetId: subnet-XXXX
+  LocalStorage:
+    RootVolume:
+      Size: 50
+  Dcv:
+    Enabled: true
+  Ssh:
+    KeyName: tipton-aws-1
+Scheduling:
+  Scheduler: slurm
+  SlurmSettings:
+    QueueUpdateStrategy: TERMINATE
+  SlurmQueues:
+  - Name: queue2
+    ComputeResources:
+    - Name: hpc6id32xlarge
+      Instances:
+      - InstanceType: hpc6id.32xlarge
+      MinCount: 0
+      MaxCount: 10
+      DisableSimultaneousMultithreading: true
+      Efa:
+        Enabled: true
+    Networking:
+      PlacementGroup:
+        Enabled: true
+      SubnetIds:
+      - subnet-XXXX
+SharedStorage:
+  - Name: FsxLustre0
+    StorageType: FsxLustre
+    MountDir: /shared
+    FsxLustreSettings:
+      StorageCapacity: 1200
+      DeploymentType: SCRATCH_2
+      DataCompressionType: LZ4
+[cloudshell-user@ip-10-0-92-86 ~]$ 
+```
+
