@@ -618,3 +618,51 @@ SharedStorage:
 [cloudshell-user@ip-10-0-92-86 ~]$ 
 ```
 
+### Part III - Installing Pre/Post-Processing Tools
+
+```
+[]$ source /shared/spack/share/spack/setup-env.sh
+[]$ spack env remove prepost
+[]$ spack env create prepost prepost.yaml
+[]$ spack env activate -p prepost
+[]$ spack concretize
+[]$ nohup spack install -j 30 &
+```
+
+```
+[ec2-user@ip-10-0-0-39 shared]$ cat prepost.yaml
+# prepost.yaml
+# Spack Environment file
+# Tests an install of packages needed to run Sierra pre and post-analysis workflow
+spack:
+  # add package specs to the `specs` list
+
+  specs:
+    - openmpi@4.1.7+legacylaunchers fabrics="auto" schedulers="slurm"
+    - libfabric fabrics=efa,tcp,udp,sockets,verbs,shm,mrail,rxd,rxm
+    - python@3.9
+    - py-numpy
+    - py-pandas
+    - py-matplotlib
+    - py-scikit-learn
+    - py-cython
+    - py-setuptools
+    - py-pip
+    - seacas
+    - py-mpi4py
+    - py-virtualenv
+    - paraview@5.9.1~qt+python
+
+  view: true
+
+  concretizer:
+    unify: true
+    reuse: false
+
+  packages:
+    all:
+      require:
+      - "%gcc@10.5.0"
+      target:
+      - "x86_64"
+```
