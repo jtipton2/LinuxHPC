@@ -565,9 +565,9 @@ $ export AWS_ACCESS_KEY_ID=XXXX
 $ export AWS_SECRET_ACCESS_KEY=XXXX
 $ export AWS_SESSION_TOKEN=XXXX
 
-$ pcluster update-compute-fleet --cluster-name hpc --status STOP_REQUESTED
+$ pcluster update-compute-fleet --cluster-name OZ4AWS --status STOP_REQUESTED
 $ pcluster update-cluster --cluster-name OZ4AWS --cluster-configuration config-hpc.yaml
-$ pcluster update-compute-fleet --cluster-name hpc --status START_REQUESTED
+$ pcluster update-compute-fleet --cluster-name OZ4AWS --status START_REQUESTED
 $ pcluster list-clusters
 ```
 
