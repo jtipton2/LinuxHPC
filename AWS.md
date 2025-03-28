@@ -666,3 +666,19 @@ spack:
       target:
       - "x86_64"
 ```
+
+### Part IV - File Transfers
+* convert Putty PPK to PEM file:  https://repost.aws/knowledge-center/ec2-ppk-pem-conversion
+* move PEM file to `~/.ssh/` directory
+* SSH into EC2 instance via:  `ssh -i ~/.ssh/<keyname>.pem ec2-user@<awsaddress>.compute.amazonaws.com -o "ProxyCommand=nc --proxy <proxyname>:<proxyport> %h %p"`
+* SCP files via:  `scp -i ~/.ssh/<keyname>.pem -o "ProxyCommand=nc --proxy <proxyname>:<proxyport> %h %p" ec2-user@<awsaddress>.compute.amazonaws.com:/folder/directory/file.name /dir/local`
+
+It turns out that file transfer via SCP can be very slow and is not recommended.  I had much greater success with HPNSSH:
+* https://fasterdata.es.net/data-transfer-tools/hpn-ssh/
+* https://copr.fedorainfracloud.org/coprs/rapier1/
+* `sudo dnf-isntall hpnssh-clients`
+* `hpnscp -P 22` was a drop-in replacement with faster file transfer times
+* If I want to download from AWS, the fastest performance is via `hpnsftp -P 22`
+
+
+
